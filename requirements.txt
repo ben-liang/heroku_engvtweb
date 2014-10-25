@@ -4,7 +4,12 @@ dj-static==0.0.6
 django-bootstrap3==4.11.0
 django-toolbelt==0.0.1
 gunicorn==19.0.0
+numpy==1.9.0
+pandas==0.15.0
 psycopg2==2.5.3
+python-dateutil==2.2
+pytz==2014.7
 requests==2.3.0
+six==1.8.0
 static3==0.5.1
 wsgiref==0.1.2
