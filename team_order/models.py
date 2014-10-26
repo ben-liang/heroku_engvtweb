@@ -7,6 +7,9 @@ class QbpBrand(models.Model):
     def __unicode__(self):
         return '%s' % self.brand
 
+    class Meta:
+        ordering = ['brand',]
+
 # Create your models here.
 class QbpPart(models.Model):
     tstamp = models.DateTimeField('tstamp', auto_now_add=True)
