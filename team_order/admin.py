@@ -8,10 +8,9 @@ class QBPPartsAdmin(admin.ModelAdmin):
     date_hierarchy = 'tstamp'
     readonly_fields = ['prodid', 'category', 'brand', 'model_description',
                     'size','color','msrp','each_cost','product_description']
-    search_fields = ['prodid', 'category', 'brand', 'model_description',
+    search_fields = ['prodid', 'category', 'brand__brand', 'model_description',
                     'size','color','msrp','each_cost','product_description']
-    list_filter = ['category','brand__brand','size']
-    list_select_related = True
+    list_filter = ['category','brand','size']
 
 class QBPBrandsAdmin(admin.ModelAdmin):
     list_display = ['brand']
