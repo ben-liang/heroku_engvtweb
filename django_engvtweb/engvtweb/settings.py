@@ -13,8 +13,33 @@ import os
 import dj_database_url
 from django_engvtweb import repository_path
 
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+## Hack here to get environment variables from .env
+from subprocess import Popen, PIPE
+import pickle
+PYTHON_DUMP_ENVIRON = """\
+import sys
+import os
+import pickle
 
+data = pickle.dumps(os.environ)
+stdout = os.fdopen(sys.stdout.fileno(), "wb")
+stdout.write(data)
+"""
+
+def source_bash_file(path):
+    bash_cmds = [
+        "source '%s'" % path,
+        "python -c '%s'" % PYTHON_DUMP_ENVIRON,
+    ]
+    p = Popen(['bash', '-c', '&&'.join(bash_cmds)], stdout=PIPE)
+    stdout, _ = p.communicate()
+    if stdout:
+        environ = pickle.loads(stdout)
+        for k, v in environ.items():
+            os.environ[k] = v
+REPOSITORY_PATH = repository_path()
+#now source DATABASE_URL var from .env file
+source_bash_file(os.path.join(REPOSITORY_PATH, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -30,8 +55,6 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
-
 #Custom Path handling
 DJANGO_IMPORT_ROOT = 'django_engvtweb'
 def _engvtimport(*import_path):
@@ -44,7 +67,6 @@ def _engvtimport(*import_path):
     """
 
     return '.'.join([DJANGO_IMPORT_ROOT] + list(import_path))
-REPOSITORY_PATH = repository_path()
 
 # Application definition
 INSTALLED_APPS = (
@@ -77,7 +99,7 @@ WSGI_APPLICATION = 'wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
