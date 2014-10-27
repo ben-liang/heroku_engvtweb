@@ -47,7 +47,7 @@ class Migration(migrations.Migration):
                 ('product_description', models.CharField(max_length=128, verbose_name=b'product_description')),
                 ('replacement', models.CharField(max_length=64, null=True, verbose_name=b'replacement', blank=True)),
                 ('substitute', models.CharField(max_length=64, null=True, verbose_name=b'substitute', blank=True)),
-                ('brand', models.ForeignKey(to='django_engvtweb.team_order.QbpBrand')),
+                ('brand', models.ForeignKey(to='QbpBrand')),
             ],
             options={
             },
