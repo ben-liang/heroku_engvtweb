@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import dj_database_url
+from django_engvtweb import repository_path
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -30,8 +31,22 @@ TEMPLATE_DEBUG = True
 ALLOWED_HOSTS = []
 
 
-# Application definition
 
+#Custom Path handling
+DJANGO_IMPORT_ROOT = 'django_engvtweb'
+def _engvtimport(*import_path):
+    """Fully qualified import path relative to :data:`DJANGO_IMPORT_ROOT`
+
+    :param list import_path: one or more levels underneath the root
+
+    :returns: fully qualified import path
+    :rtype: str
+    """
+
+    return '.'.join([DJANGO_IMPORT_ROOT] + list(import_path))
+REPOSITORY_PATH = repository_path()
+
+# Application definition
 INSTALLED_APPS = (
     'grappelli',
     'django.contrib.admin',
@@ -41,8 +56,10 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap3',
+) + tuple(map(_engvtimport, [
     'team_order',
-)
+    'engvtweb'
+]))
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -53,7 +70,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'engvtweb.urls'
+ROOT_URLCONF = _engvtimport('engvtweb.urls')
 
 WSGI_APPLICATION = 'wsgi.application'
 
@@ -81,13 +98,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.6/howto/static-files/
-
-STATIC_URL = '/static/'
-
-
 # Parse database configuration from $DATABASE_URL
 DATABASES['default'] =  dj_database_url.config()
 
@@ -98,7 +108,6 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 ALLOWED_HOSTS = ['*']
 
 # Static asset configuration
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
 
@@ -106,7 +115,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(BASE_DIR, 'templates'),
+    os.path.join(REPOSITORY_PATH, 'templates'),
 )
 
 # List of callables that know how to import templates from various sources.
@@ -133,7 +142,7 @@ STATICFILES_FINDERS = (
 )
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(REPOSITORY_PATH, 'static'),
 )
 
 GRAPPELLI_ADMIN_TITLE = 'ENGVTWeb'
