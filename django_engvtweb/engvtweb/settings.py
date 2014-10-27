@@ -14,6 +14,7 @@ import dj_database_url
 from django_engvtweb import repository_path
 
 ## Hack here to get environment variables from .env
+## source: https://gist.github.com/vlasovskikh/e8fe8e0a5c4a73048a09
 from subprocess import Popen, PIPE
 import pickle
 PYTHON_DUMP_ENVIRON = """\
@@ -37,6 +38,7 @@ def source_bash_file(path):
         environ = pickle.loads(stdout)
         for k, v in environ.items():
             os.environ[k] = v
+
 REPOSITORY_PATH = repository_path()
 #now source DATABASE_URL var from .env file
 source_bash_file(os.path.join(REPOSITORY_PATH, '.env'))
