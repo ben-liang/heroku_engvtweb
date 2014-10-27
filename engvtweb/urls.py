@@ -4,7 +4,6 @@ from django.contrib import admin
 admin.autodiscover()
 
 import views
-import hello.views
 
 urlpatterns = patterns('',
     # Examples:
