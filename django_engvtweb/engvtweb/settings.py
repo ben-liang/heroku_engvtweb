@@ -80,6 +80,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap3',
+    'changuito'
 ) + tuple(map(_engvtimport, [
     'team_order',
     'engvtweb'
@@ -92,6 +93,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'changuito.middleware.CartMiddleware',
 )
 
 ROOT_URLCONF = _engvtimport('engvtweb.urls')
