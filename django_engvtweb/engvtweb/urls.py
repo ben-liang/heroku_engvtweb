@@ -1,6 +1,5 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from shop import urls as shop_urls
 
 admin.autodiscover()
 
@@ -14,7 +13,6 @@ urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
     # url(r'^db', hello.views.db, name='db'),
     url(r'^grappelli/', include('grappelli.urls')),
-    (r'^shop/', include(shop_urls)),
     url(r'^admin/', include(admin.site.urls)),
 
 )
