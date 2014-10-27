@@ -12,6 +12,9 @@ class QbpBrand(models.Model):
 
 # Create your models here.
 class QbpPart(models.Model):
+    class Meta:
+        pass
+
     tstamp = models.DateTimeField('tstamp', auto_now_add=True)
     prodid = models.CharField('prod id', max_length=32)
     UPC = models.BigIntegerField('upc', null=True, blank=True)

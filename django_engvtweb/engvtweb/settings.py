@@ -80,9 +80,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap3',
-    'polymorphic', # We need polymorphic installed for the shop
-    'shop', # The django SHOP application
-    'shop.addressmodel',
 ) + tuple(map(_engvtimport, [
     'team_order',
     'engvtweb'
