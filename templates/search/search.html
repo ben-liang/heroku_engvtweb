@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block contentmain %}
+    <h2>Search</h2>
+
+    <form method="get" action=".">
+
+            {% bootstrap_form form %}
+            <button type="submit" class="btn btn-primary">
+            {% bootstrap_icon "search" %} Search
+            </button>
+
+        {% if query %}
+            <h3>Results</h3>
+
+            {% for result in page.object_list %}
+                <p>
+                    <a href="{{ result.object.get_absolute_url }}">{{ result.object.product_description }} | {{ result.object.each_cost }}</a>
+                </p>
+            {% empty %}
+             <div class="alert alert-danger alert-dismissable" role="alert">
+                  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    No results found.
+                </div>
+            {% endfor %}
+
+            {% if page.has_previous or page.has_next %}
+                <div>
+                    {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
+                    |
+                    {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
+                </div>
+            {% endif %}
+        {% else %}
+            {# Show some example queries to run, maybe query syntax, something else? #}
+        {% endif %}
+    </form>
+{% endblock %}
