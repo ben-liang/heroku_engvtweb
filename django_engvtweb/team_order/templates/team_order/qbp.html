@@ -21,10 +21,10 @@ function select_facet(field_name, id){
 
 $(function(){
     $('.control-label').hide();
-    $('#category-select').click(function(){
+    $('#category-select').change(function(){
         select_facet('category','category-select');
     });
-    $('#brand-select').click(function(){
+    $('#brand-select').change(function(){
         select_facet('brand','brand-select');
     });
 });
@@ -47,7 +47,8 @@ $(function(){
                 {# Begin faceting here #}
                 <div class="form-group">
                     <label class="sr-only" for="brand-select">Brand</label>
-                    <select id="brand-select" class="form-control" >{#  onchange="select_facet('brand','brand-select')">#}
+                    <select id="brand-select" class="form-control" >
+                    <option selected="selected">{{ facets.fields.brand | length }} Brand(s)</option>
                     {% if facets.fields.brand %}
                         {% for brand in facets.fields.brand %}
                             <option>{{ brand.0 }} ({{ brand.1 }})</option>
@@ -57,13 +58,14 @@ $(function(){
                 </div>
                 <div class="form-group">
                     <label class="sr-only" for="category-select">Category</label>
-                    <select id="category-select" class="form-control"> {# onchange="select_facet('category','category-select')">  #}
-                    {% if facets.fields.category %}
-                        {% for category in facets.fields.category %}
-                            <option>{{ category.0 }} ({{ category.1 }})</option>
-                        {% endfor %}
-                        </select>
-                    {% endif %}
+                    <select id="category-select" class="form-control">
+                        <option selected="selected">{{ facets.fields.category | length }} Category(s)</option>
+                        {% if facets.fields.category %}
+                            {% for category in facets.fields.category %}
+                                <option>{{ category.0 }} ({{ category.1 }})</option>
+                            {% endfor %}
+                            </select>
+                        {% endif %}
                 </div>
         </form>
                 <br>
