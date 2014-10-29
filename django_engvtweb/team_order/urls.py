@@ -6,8 +6,8 @@ from haystack.views import FacetedSearchView
 from views import *
 from forms import *
 
-sqs = SearchQuerySet().facet('brand').facet('category').order_by('category')
-
 urlpatterns = patterns('',
-    url(r'^qbp/', FacetedSearchView(form_class=QbpForm, template='team_order/qbp.html', searchqueryset=sqs), name='qbp'),
+    url(r'^qbp/', FacetedSearchView(form_class=QbpForm,
+                                    template='team_order/qbp.html',
+                                    searchqueryset=qbp_sqs), name='qbp'),
 )
