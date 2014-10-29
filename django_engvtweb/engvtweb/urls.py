@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
     # url(r'^db', hello.views.db, name='db'),
     url(r'^grappelli/', include('grappelli.urls')),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^team_order/', include('django_engvtweb.team_order.urls')),
     url(r'^search/', include('haystack.urls')),
+    url(r'^admin/', include(admin.site.urls))
 )

@@ -3,8 +3,9 @@
 {% load engvtweb_tags %}
 
 {% block contentmain %}
-    <h2>Search</h2>
+    <h2>Search the QBP Catalog</h2>
 
+    <p> This is super-top secret #trusttree </p>
     <form method="get" action=".">
 
             {% bootstrap_form form %}
@@ -12,8 +13,36 @@
             {% bootstrap_icon "search" %} Search
             </button>
 
-        {% if query %}
-            <h3>Results</h3>
+        {% if query or page.object_list %}
+{#            <h3>Results</h3>#}
+                {# Begin faceting here #}
+                <div>
+                    <dl>
+                        {% if facets.fields.brand %}
+                            <dt>Brand</dt>
+                            {# Provide only the top 5 authors #}
+                            {% for brand in facets.fields.brand|slice:":5" %}
+                                <dd><a href="{{ request.get_full_path }}&amp;selected_facets=brand_exact:{{ brand.0|urlencode }}">{{ brand.0 }}</a> ({{ brand.1 }})</dd>
+                            {% endfor %}
+                        {% else %}
+                            <p></p>
+                        {% endif %}
+                    </dl>
+                </div>
+                <div>
+                    <dl>
+                        {% if facets.fields.category %}
+                            <dt>Category</dt>
+                            {# Provide only the top 5 categories #}
+                            {% for category in facets.fields.category|slice:":5" %}
+                                <dd><a href="{{ request.get_full_path }}&amp;selected_facets=category_exact:{{ category.0|urlencode }}">{{ category.0 }}</a> ({{ category.1 }})</dd>
+                            {% endfor %}
+                        {% else %}
+                            <p></p>
+                        {% endif %}
+                    </dl>
+                </div>
+
                 <table class="table table-hover table-condensed">
                     <thead>
                         <tr>
