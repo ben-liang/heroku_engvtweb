@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 import dj_database_url
 from django_engvtweb import repository_path
+from urlparse import urlparse
 
 ## Hack here to get environment variables from .env
 ## source: https://gist.github.com/vlasovskikh/e8fe8e0a5c4a73048a09
@@ -79,12 +80,31 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'bootstrap3',
-    'changuito'
+    'changuito',
+    'haystack',
 ) + tuple(map(_engvtimport, [
     'team_order',
     'engvtweb'
 ]))
+
+
+#Heroku SearchBox (ElasticSearch add-on) configuration
+es = urlparse(os.environ.get('SEARCHBOX_URL') or 'http://127.0.0.1:9200/')
+port = es.port or 80
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': es.scheme + '://' + es.hostname + ':' + str(port),
+        'INDEX_NAME': 'documents',
+        'INCLUDE_SPELLING': True,
+    },
+}
+if es.username:
+    HAYSTACK_CONNECTIONS['default']['KWARGS'] = {"http_auth": es.username + ':' + es.password}
+
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
