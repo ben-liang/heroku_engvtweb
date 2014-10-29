@@ -41,28 +41,38 @@ $(function(){
 
             {% bootstrap_form form %}
             <button type="submit" class="btn btn-primary">{% bootstrap_icon "search" %}</button>
-
             {% if query or page.object_list %}
 {#            <h3>Results</h3>#}
                 {# Begin faceting here #}
                 <div class="form-group">
                     <label class="sr-only" for="brand-select">Brand</label>
                     <select id="brand-select" class="form-control" >
-                    <option selected="selected">{{ facets.fields.brand | length }} Brand(s)</option>
+
+                    {% if facets.fields.brand|length == 1 %}
+                    <option>--- All Brands ---</option>
+                    {% else %}
+                    <option selected="selected">{{ facets.fields.brand|length }} Brand(s)</option>
+                    {% endif %}
+
                     {% if facets.fields.brand %}
                         {% for brand in facets.fields.brand %}
-                            <option>{{ brand.0 }} ({{ brand.1 }})</option>
+                            <option {% if facets.fields.brand|length == 1 %} selected="selected" {% endif %}>{{ brand.0 }} ({{ brand.1 }})</option>
                         {% endfor %}
                     {% endif %}
                     </select>
                 </div>
+
                 <div class="form-group">
                     <label class="sr-only" for="category-select">Category</label>
                     <select id="category-select" class="form-control">
-                        <option selected="selected">{{ facets.fields.category | length }} Category(s)</option>
+                        {% if facets.fields.category|length == 1 %}
+                        <option>--- All Categories ---</option>
+                        {% else %}
+                        <option selected="selected">{{ facets.fields.category|length }} Category(s)</option>
+                        {% endif %}
                         {% if facets.fields.category %}
                             {% for category in facets.fields.category %}
-                                <option>{{ category.0 }} ({{ category.1 }})</option>
+                                <option {% if facets.fields.category|length == 1 %} selected="selected" {% endif %}>{{ category.0 }} ({{ category.1 }})</option>
                             {% endfor %}
                             </select>
                         {% endif %}
