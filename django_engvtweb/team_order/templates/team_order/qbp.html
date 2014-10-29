@@ -16,7 +16,14 @@ function select_facet(field_name, id){
     if (q == null){
         current_url += '?q='
     }
-    window.location.href = current_url + "&selected_facets=" + field_name + "_exact:" + encoded_val
+
+    var new_url = '';
+    if (facet_value.indexOf("--- All") > -1) {
+        new_url = removeAllQueryStrings(current_url, 'selected_facets', field_name);
+    } else {
+        new_url = current_url + "&selected_facets=" + field_name + "_exact:" + encoded_val
+    }
+    window.location.href = new_url;
 }
 
 $(function(){
