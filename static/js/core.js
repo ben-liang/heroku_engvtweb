@@ -53,3 +53,17 @@ function getQSValue(url, query_string) {
     return null;
 }
 
+function activate_link(link_inner_text){
+    $('.nav').find('.active').removeClass('active');
+    var hrefs = $('.nav').children().children();
+    for (var i= 0; i < hrefs.length; i++) {
+        var a = hrefs[i];
+        if (a.innerText == link_inner_text) {
+            a.parentElement.setAttribute('class', 'active');
+        }
+    }
+}
+
+
+
+
