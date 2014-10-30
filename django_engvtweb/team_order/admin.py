@@ -4,12 +4,12 @@ from .models import *
 
 class QBPPartsAdmin(admin.ModelAdmin):
     list_display = ['prodid', 'category', 'brand', 'model_description',
-                    'size','color','msrp','each_cost','product_description']
+                    'size','color','msrp','unit_price','product_description']
     date_hierarchy = 'tstamp'
     readonly_fields = ['prodid', 'category', 'brand', 'model_description',
-                    'size','color','msrp','each_cost','product_description']
+                    'size','color','msrp','unit_price','product_description']
     search_fields = ['prodid', 'category', 'brand__brand', 'model_description',
-                    'size','color','msrp','each_cost','product_description']
+                    'size','color','msrp','unit_price','product_description']
     list_filter = ['category','brand','size']
 
 class QBPBrandsAdmin(admin.ModelAdmin):

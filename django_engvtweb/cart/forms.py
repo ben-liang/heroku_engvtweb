@@ -7,7 +7,7 @@ class AddToCartForm(forms.Form):
     #be easier to keep as CharField so that choices don't have to be modified
     #as new objects are added
     object_type = forms.CharField(widget=forms.HiddenInput)
-    quantity = forms.IntegerField()
+    quantity = forms.DecimalField()
 
     def clean(self):
         cleaned_data = super(AddToCartForm, self).clean()
