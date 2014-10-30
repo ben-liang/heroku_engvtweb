@@ -34,6 +34,7 @@ $(function(){
     $('#brand-select').change(function(){
         select_facet('brand','brand-select');
     });
+    activate_link('Team Order')
 });
 
 {#<a href="{{ request.get_full_path }}&amp;selected_facets=category_exact:{{ category.0|urlencode }}">#}
@@ -94,7 +95,6 @@ $(function(){
                             <th>Brand</th>
                             <th>Description</th>
                             <th>Cost</th>
-                            <th>Quantity</th>
                             <th>Add to Cart</th>
                         </tr>
                     </thead>
@@ -106,8 +106,14 @@ $(function(){
                     <td>{{ result.object.brand }}</td>
                     <td><a target="_blank" href="https://www.google.com/search?q={{ result.object.product_description | urlencode}}">{{ result.object.product_description }}</a></td>
                     <td>{{ result.object.each_cost | currency }}</td>
-                    <td></td>
-                    <td></td>
+                    <td>
+                        <form class="form-inline" role="form">
+                            <div class="form-group">
+                                {% bootstrap_form result.object.cart_form %}
+                                <button type="submit" class="btn btn-primary">{% bootstrap_icon "shopping-cart" %}</button>
+                            </div>
+                        </form>
+                    </td>
                 </tr>
                 {% empty %}
                  <div class="alert alert-danger alert-dismissable" role="alert">

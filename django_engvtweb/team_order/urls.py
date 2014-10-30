@@ -7,7 +7,7 @@ from views import *
 from forms import *
 
 urlpatterns = patterns('',
-    url(r'^qbp/', FacetedSearchView(form_class=QbpForm,
-                                    template='team_order/qbp.html',
-                                    searchqueryset=qbp_sqs), name='qbp'),
+    url(r'^qbp/', QBPSearchView(form_class=QbpForm,
+                                template='team_order/qbp.html',
+                                searchqueryset=qbp_sqs), name='qbp'),
 )
