@@ -27,7 +27,7 @@ class QbpPart(models.Model):
     color = models.CharField('color', max_length=32, null=True, blank=True)
     msrp = models.FloatField('msrp')
     map = models.FloatField('map')
-    each_cost = models.FloatField('each cost')
+    unit_price = models.FloatField('unit_price')
     manufacturer_prod = models.CharField('manufacturer_prod', max_length=64,
                                          null=True, blank=True)
     coo =  models.CharField('coo', max_length=16, null=True, blank=True)

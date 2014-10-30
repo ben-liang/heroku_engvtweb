@@ -94,7 +94,7 @@ $(function(){
                             <th>Category</th>
                             <th>Brand</th>
                             <th>Description</th>
-                            <th>Cost</th>
+                            <th>Unit Price</th>
                             <th>Add to Cart</th>
                         </tr>
                     </thead>
@@ -105,10 +105,11 @@ $(function(){
                     <td>{{ result.object.category}}</td>
                     <td>{{ result.object.brand }}</td>
                     <td><a target="_blank" href="https://www.google.com/search?q={{ result.object.product_description | urlencode}}">{{ result.object.product_description }}</a></td>
-                    <td>{{ result.object.each_cost | currency }}</td>
+                    <td>{{ result.object.unit_price|currency }}</td>
                     <td>
-                        <form class="form-inline" role="form">
+                        <form class="form-inline" role="form" method='post' action="{% url 'cart:cart-add' %}">
                             <div class="form-group">
+                                {% csrf_token %}
                                 {% bootstrap_form result.object.cart_form %}
                                 <button type="submit" class="btn btn-primary">{% bootstrap_icon "shopping-cart" %}</button>
                             </div>
