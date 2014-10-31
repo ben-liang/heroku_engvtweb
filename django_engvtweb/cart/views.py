@@ -17,18 +17,22 @@ PRODUCT_MODELS = {
 }
 
 def add_item_to_shopping_cart(request):
+
     if request.method == 'POST':
         form = AddToCartForm(request.POST)
         if form.is_valid():
-            quantity = form.cleaned_data['quantity']
+            quantity = int(form.cleaned_data['quantity'])
             object_type = form.cleaned_data['object_type']
             obj_id = form.cleaned_data['object_id']
             model = PRODUCT_MODELS[object_type]
             product = model.objects.get(id=obj_id)
             cart = request.cart
             cart.add(product, product.unit_price, quantity)
-            return HttpResponseRedirect(reverse('cart:cart-add'))
+            return HttpResponseRedirect(reverse('cart:cart'))
 
 def render_shopping_cart(request):
-    return render(request, 'cart/index.html',dict(cart=CartProxy(request)))
+    cart = request.cart
+    item_prices = [item.total_price for item in cart]
+    total = sum(item_prices)
+    return render(request, 'cart/index.html',dict(cart=CartProxy(request), total=total))
 

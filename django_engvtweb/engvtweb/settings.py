@@ -86,7 +86,8 @@ INSTALLED_APPS = (
     'haystack',
 ) + tuple(map(_engvtimport, [
     'team_order',
-    'engvtweb'
+    'engvtweb',
+    'cart',
 ]))
 
 

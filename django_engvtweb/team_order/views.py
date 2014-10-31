@@ -1,6 +1,7 @@
 from haystack.views import FacetedSearchView
 from haystack.query import SearchQuerySet
 from django_engvtweb.cart.forms import *
+from django.shortcuts import render
 #searchqueryset that is passed into view class
 qbp_sqs = SearchQuerySet().order_by('category', 'brand').\
     facet('category', size=2000, order='term').\
@@ -27,7 +28,9 @@ class QBPSearchView(FacetedSearchView):
 
         return (paginator, page)
 
+def render_bike(request):
+    return render(request, 'team_order/bike.html', {})
 
-
-
+def render_stages(request):
+    return render(request, 'team_order/stages.html', {})
 

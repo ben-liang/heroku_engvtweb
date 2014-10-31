@@ -41,16 +41,16 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Team Order<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
 {#            <li><a href="#">Kit</a></li>#}
-            <li><a href="/team_order/qbp">Bike</a></li>
+            <li><a href="{% url 'team_order:bike' %}">Bike</a></li>
             <li class="divider"></li>
             <li class="dropdown-header">Parts</li>
-            <li><a href="/team_order/qbp">QBP</a></li>
-            <li><a href="/team_order/stages">Stages</a></li>
+            <li><a href="{% url 'team_order:qbp' %}">QBP</a></li>
+            <li><a href="{% url 'team_order:stages' %}">Stages</a></li>
           </ul>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">My Cart</a></li>
+        <li><a href="{% url 'cart:cart' %}">My Cart</a></li>
         <li><a href="/admin">Admin</a></li>
       </ul>
     </div><!--/.nav-collapse -->

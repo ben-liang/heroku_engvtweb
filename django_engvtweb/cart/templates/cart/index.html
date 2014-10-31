@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load engvtweb_tags %}
 
 {% block head %}
 <script type="text/javascript">
@@ -14,7 +16,6 @@ $(function(){
     <thead>
         <tr>
             <th>Product</th>
-            <th>Description</th>
             <th>Quantity</th>
             <th>Total Price</th>
         </tr>
@@ -24,10 +25,17 @@ $(function(){
         <tr>
             <td>{{ item.product.product_description }}</td>
             <td>{{ item.quantity }}</td>
-            <td>{{ item.total_price }}</td>
+            <td>{{ item.total_price|currency }}</td>
         </tr>
-    </tbody>
     {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td></td>
+            <td><b>Total</b></td>
+            <td><b>{{ total|currency }}</b></td>
+        </tr>
+    </tfoot>
 </table>
 
 {% endblock %}
