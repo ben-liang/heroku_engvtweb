@@ -2,7 +2,7 @@ Django==1.7
 dj-database-url==0.3.0
 dj-static==0.0.6
 django-bootstrap3==4.11.0
--e git+https://github.com/angvp/django-changuito.git@ff36ff74ae80822cf3d28cf30473ce92e811fb3a#egg=django_changuito-master
+./engvtweb_third/django-changuito-0.7.ben.tar.gz
 django-classy-tags==0.5.1
 django-grappelli==2.6.2
 django-haystack==2.3.1
