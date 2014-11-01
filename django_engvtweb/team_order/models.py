@@ -1,21 +1,43 @@
 __author__ = 'bliang'
 from django.db import models
 import pandas
-from utils import removeNonAscii
+from django.db.transaction import atomic
+
+def removeNonAscii(s):
+    if isinstance(s, basestring):
+        return "".join(i for i in s if ord(i)<128)
+    else:
+        return s
 
 class PartBrandOrCategory(models.Model):
+    """
+    Generic class for Brand or Category models for any type product
+    """
 
     class Meta:
         ordering = ['name',]
         abstract = True
+        unique_together = ('name',)
 
     name = models.CharField('name', max_length=32, null=False, blank=False)
 
     def __unicode__(self):
-        return '%s' % self.brand
+        return '%s' % self.name
 
     @classmethod
-    def bulk_create_and_get_from_series(cls,pandas_series):
+    def get_object_ids_map(cls):
+        """
+        get ids in dict to speed up bulk create of objects
+        #this will avoid a new query for each row
+        """
+        values_qs = cls.objects.all().values()
+        #make it easier to work with here
+        values_dict = dict([(i['name'],i['id']) for i in values_qs])
+        return values_dict
+
+    @classmethod
+    @atomic
+    def bulk_create_from_series(cls,pandas_series):
         """
         Shortcut to bulk_create new dimensions from Pandas series, i.e. DF column.
 
@@ -28,14 +50,28 @@ class PartBrandOrCategory(models.Model):
         #now create brands
         unique_values = pandas_series.unique()
         brand_objs = [cls(name=removeNonAscii(k)) for k in unique_values]
-        QbpBrand.objects.bulk_create(brand_objs)
+        cls.objects.bulk_create(brand_objs)
 
-        #get ids in dict to speed up bulk create of objects
-        #this will avoid a new query for each row
-        values_qs = cls.objects.all().values()
-        #make it easier to work with here
-        values_dict = dict([(i['brand'],i['id']) for i in values_qs])
-        return values_dict
+    @classmethod
+    @atomic
+    def get_or_create_from_series(cls,pandas_series):
+        """
+        Shortcut to get_or_create new dimensions from Pandas series, i.e. DF column.
+
+        Returns a dict of {'name': object_id} for easy lookup in creating new
+        parts objects.
+
+        Will be a lot slower for large series than bulk_create_and_get_from_series,
+        but may be necessary to use this instead for data sets involving previously
+        existing dimension values.
+
+        :param pandas_series: a Pandas series object, e.g. df['brand'] from DataFrame
+        :return: dict
+        """
+        #now create brands
+        unique_values = pandas_series.unique()
+        for val in unique_values:
+            cls.objects.get_or_create(name=removeNonAscii(val))
 
 class QbpBrand(PartBrandOrCategory):
     pass
@@ -84,7 +120,12 @@ class QbpPart(models.Model):
         return cls.__name__.lower()
 
 class Part(models.Model):
+    """
+    Generic Part model to subclass.
 
+    MUST specify 'brand' and 'category' fields in subclass as FK's
+    to dimension models.
+    """
     class Meta:
         abstract = True
 
@@ -95,6 +136,9 @@ class Part(models.Model):
     msrp = models.FloatField('msrp', null=True, blank=True)
     unit_price = models.FloatField('unit_price')
 
+    def __unicode__(self):
+        return '%s' % self.name
+
     @classmethod
     def get_slug_name(cls):
         """
@@ -104,45 +148,69 @@ class Part(models.Model):
         return cls.__name__.lower()
 
     @classmethod
-    def bulk_create_from_csv(cls, filepath, brand=None):
+    @atomic
+    def bulk_create_from_csv(cls, filepath, brand=None, category=None):
         """
         Imports file for a single vendor's parts or bikes into Bike or OtherPart
         model.  File must be csv and have headers:
 
-        brand(optional)   category    model_no(optional) description msrp    unit_price
+        brand(optional)   category(optional)    model_no    name    description msrp    unit_price
 
         :param file: path to file
-        :param brand: string for brand name
+        :param brand: brand object
+        :param category: category object
         """
         #read data into dataframe to make things quick
         df = pandas.io.parsers.read_csv(filepath, header=0)
         df = df.fillna('None')
 
+        #figure out how to handle brands based on file headers and
+        #kwargs
+        brand_id = None
         if brand is None:
-            if df['brand']:
-                pass
+            if 'brand' not in df.keys():
+                raise KeyError('Field "brand" must be specified either in brand file field'
+                               ' or brand kwarg')
+            else:
+                #if passed in as column, bulk_create and get object ids for object creation
+                brand_model = cls.brand.field.related.parent_model
+                brand_model.bulk_create_from_series(df['brand'])
+                brand_ids = brand_model.get_object_ids_map()
+        else:
+            brand_id = brand.id
 
-        #now get_or_create categories
-        unique_brands = df['category'].unique()
-        brand_objs = [QbpBrand(name=removeNonAscii(k)) for k in unique_brands]
-        QbpBrand.objects.bulk_create(brand_objs)
+        category_id = None
+        #do the same for category
+        if category is None:
+            if 'category' not in df.keys():
+                raise KeyError('Field "category" must be specified either in brand file field'
+                               ' or brand kwarg')
+            else:
+                #now get_or_create categories
+                #first get category model
+                category_model = cls.category.field.related.parent_model
+                #call pre-defined method on category model to bulk_create_categories
+                category_model.bulk_create_from_series(df['category'])
+                category_ids = category_model.get_object_ids_map()
+        else:
+            category_id = category.id
 
+        #now we're ready to bulk create the objects
         n = lambda v: None if v == 'None' else v
         #create
         parts_objs = []
         for i in range(0, len(df)):
             row = df.ix[i]
             part = cls(model_no=n(row.model_no),
-                       name=n(row.name),
-                       brand=n(row.brand),
-                       category=n(row.category),
-                       description=removeNonAscii(n(row.description)),
+                       name=n(removeNonAscii(row['name'])),
+                       brand_id=(brand_id or brand_ids[n(removeNonAscii(row.brand))]),
+                       category_id=(category_id or category_ids[n(row.category)]),
+                       description=n(removeNonAscii(row.description)),
                        msrp=n(row.msrp),
                        unit_price=row.unit_price)
             parts_objs.append(part)
         #finally, bulk create all parts
         cls.objects.bulk_create(parts_objs)
-
 
 class BikeBrand(PartBrandOrCategory):
     pass
