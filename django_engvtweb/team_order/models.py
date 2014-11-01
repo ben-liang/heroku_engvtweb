@@ -19,7 +19,7 @@ class PartBrandOrCategory(models.Model):
         abstract = True
         unique_together = ('name',)
 
-    name = models.CharField('name', max_length=32, null=False, blank=False)
+    name = models.CharField('name', max_length=64, null=False, blank=False)
 
     def __unicode__(self):
         return '%s' % self.name
