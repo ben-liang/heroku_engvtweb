@@ -29,7 +29,7 @@
   <div class="container">
     <div class="navbar-header">
 
-      <a class="navbar-brand" href="#">ENGVTWeb</a>
+      <a class="navbar-brand" href="#"><img src="{% static "img/ENGVT_Logo_2D.png" %}"></a>
     </div>
 
     <div class="navbar-collapse collapse">
@@ -50,7 +50,7 @@
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="{% url 'cart:cart' %}">My Cart</a></li>
+        <li><a href="{% url 'cart:cart' %}">My Cart {% bootstrap_icon "shopping-cart" %}<span class="badge">{{ shopping_cart.total_quantity|to_int}}</span></a></li>
         <li><a href="/admin">Admin</a></li>
       </ul>
     </div><!--/.nav-collapse -->
