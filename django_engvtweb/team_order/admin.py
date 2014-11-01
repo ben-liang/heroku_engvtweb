@@ -17,5 +17,27 @@ class QBPBrandsAdmin(admin.ModelAdmin):
     search_fields = ['brand']
     readonly_fields = ['brand']
 
+class BikeBrandsAdmin(admin.ModelAdmin):
+    list_display = ['name']
+    search_fields = ['name']
+
+class BikeAdmin(admin.ModelAdmin):
+    list_display = ['brand','category','name','description','msrp','unit_price']
+    search_fields = ['brand','category','name','description']
+    list_filter = ['category','brand']
+
+class OtherPartVendorAdmin(admin.ModelAdmin):
+    list_display = ['name']
+    search_fields = ['name']
+
+class OtherPartAdmin(admin.ModelAdmin):
+    list_display = ['brand','category','name','description','msrp','unit_price']
+    search_fields = ['brand','category','name','description']
+    list_filter = ['category','brand']
+
 admin.site.register(QbpPart,QBPPartsAdmin)
 admin.site.register(QbpBrand,QBPBrandsAdmin)
+admin.site.register(BikeBrand,BikeBrandsAdmin)
+admin.site.register(Bike,BikeAdmin)
+admin.site.register(OtherPartVendor,OtherPartVendorAdmin)
+admin.site.register(OtherPart,OtherPartAdmin)
