@@ -132,7 +132,7 @@ class Part(models.Model):
     tstamp = models.DateTimeField('tstamp', auto_now_add=True)
     model_no = models.CharField('model_no',max_length=16, null=True, blank=True)
     name = models.CharField('name', max_length=32)
-    description = models.CharField('description', max_length=64)
+    description = models.CharField('description', max_length=64,null=True,blank=True)
     msrp = models.FloatField('msrp', null=True, blank=True)
     unit_price = models.FloatField('unit_price')
 
@@ -152,13 +152,24 @@ class Part(models.Model):
     def bulk_create_from_csv(cls, filepath, brand=None, category=None):
         """
         Imports file for a single vendor's parts or bikes into Bike or OtherPart
-        model.  File must be csv and have headers:
+        model.  File must be csv and have the following headers::
 
-        brand(optional)   category(optional)    model_no    name    description msrp    unit_price
+            brand (optional)
+            category (optional)
+            model_no (nullable)
+            name
+            description (nullable)
+            msrp (nullable)
+            unit_price
 
-        :param file: path to file
-        :param brand: brand object
-        :param category: category object
+        Additionally, if only importing parts for one brand and/or category,
+        can specify brand/category names as keyword args to avoid having to
+        create a new file field just for category/brand.
+
+        :param file: path to CSV file
+        :param brand: brand object. NOTE: If not None, will OVERRIDE ALL brand values in file
+        :param category: category object. NOTE: If not None, will OVERRIDE ALL brand values in file
+        :return Queryset for new objects
         """
         #read data into dataframe to make things quick
         df = pandas.io.parsers.read_csv(filepath, header=0)
@@ -174,7 +185,7 @@ class Part(models.Model):
             else:
                 #if passed in as column, bulk_create and get object ids for object creation
                 brand_model = cls.brand.field.related.parent_model
-                brand_model.bulk_create_from_series(df['brand'])
+                brand_model.get_or_create_from_series(df['brand'])
                 brand_ids = brand_model.get_object_ids_map()
         else:
             brand_id = brand.id
@@ -190,7 +201,7 @@ class Part(models.Model):
                 #first get category model
                 category_model = cls.category.field.related.parent_model
                 #call pre-defined method on category model to bulk_create_categories
-                category_model.bulk_create_from_series(df['category'])
+                category_model.get_or_create_from_series(df['category'])
                 category_ids = category_model.get_object_ids_map()
         else:
             category_id = category.id
@@ -211,7 +222,9 @@ class Part(models.Model):
             parts_objs.append(part)
         #finally, bulk create all parts
         cls.objects.bulk_create(parts_objs)
+        return parts_objs
 
+## Bikes ##
 class BikeBrand(PartBrandOrCategory):
     pass
 
@@ -222,6 +235,7 @@ class Bike(Part):
     brand = models.ForeignKey(BikeBrand)
     category = models.ForeignKey(BikeCategory)
 
+## Other Parts ##
 class OtherPartVendor(PartBrandOrCategory):
     pass
 
