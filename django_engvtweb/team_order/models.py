@@ -15,18 +15,27 @@ class PartBrandOrCategory(models.Model):
         return '%s' % self.brand
 
     @classmethod
-    def create_and_get_from_df_col(cls,pandas_series):
+    def bulk_create_and_get_from_series(cls,pandas_series):
+        """
+        Shortcut to bulk_create new dimensions from Pandas series, i.e. DF column.
+
+        Returns a dict of {'name': object_id} for easy lookup in creating new
+        parts objects.
+
+        :param pandas_series: a Pandas series object, e.g. df['brand'] from DataFrame
+        :return: dict
+        """
         #now create brands
         unique_values = pandas_series.unique()
-        brand_objs = [cls(brand=removeNonAscii(k)) for k in unique_values]
+        brand_objs = [cls(name=removeNonAscii(k)) for k in unique_values]
         QbpBrand.objects.bulk_create(brand_objs)
 
         #get ids in dict to speed up bulk create of objects
         #this will avoid a new query for each row
         values_qs = cls.objects.all().values()
         #make it easier to work with here
-        values_qs = dict([(i['brand'],i['id']) for i in values_qs])
-        return values_qs
+        values_dict = dict([(i['brand'],i['id']) for i in values_qs])
+        return values_dict
 
 class QbpBrand(PartBrandOrCategory):
     pass
