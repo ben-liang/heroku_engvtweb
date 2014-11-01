@@ -26,9 +26,9 @@ class BikeCategoryAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
 class BikeAdmin(admin.ModelAdmin):
-    list_display = ['brand','category','name','description','msrp','unit_price']
+    list_display = ['brand','category','name','description','msrp','unit_price','active']
     search_fields = ['brand','category','name','description']
-    list_filter = ['category','brand']
+    list_filter = ['category','brand','active']
 
 class OtherPartVendorAdmin(admin.ModelAdmin):
     list_display = ['name']
@@ -39,9 +39,9 @@ class OtherPartCategoryAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
 class OtherPartAdmin(admin.ModelAdmin):
-    list_display = ['brand','category','name','description','msrp','unit_price']
+    list_display = ['brand','category','name','description','msrp','unit_price','active']
     search_fields = ['brand','category','name','description']
-    list_filter = ['category','brand']
+    list_filter = ['category','brand','active']
 
 admin.site.register(QbpPart,QBPPartsAdmin)
 admin.site.register(QbpBrand,QBPBrandsAdmin)
