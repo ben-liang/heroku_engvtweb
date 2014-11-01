@@ -41,20 +41,44 @@ def add_item_to_shopping_cart(request):
 
 def render_shopping_cart(request):
     """
-
-    :param request:
-    :return:
+    Renders shopping cart index, and also handles updating of totals through formset rendered on page.
     """
+    cart = request.cart
     if request.method == 'POST':
-        pass
-    else:
-        cart = request.cart
-        initial_data = [{'object_id': item.object_id,
-                         'object_type': item.content_type.model,
-                         'quantity': int(item.quantity)} for item in cart]
-        formset = CartFormset(initial=initial_data)
-        item_prices = [item.total_price for item in cart]
-        total = sum(item_prices)
-        return render(request, 'cart/index.html',
-                      dict(cart=CartProxy(request), total=total, formset=formset))
+        formset = CartFormset(request.POST)
+        #validate formset
+        if formset.is_valid():
+            #loop through each item to see if quantity has changed
+            #if so, update quantity
+            for form in formset:
+                new_quantity = form.cleaned_data['quantity']
+                item_id = form.cleaned_data['item_id']
+                item = cart.get_item(item_id)
+                if item.quantity != new_quantity:
+                    if new_quantity == 0:
+                        cart.remove_item(item_id)
+                    item.update_quantity(new_quantity)
+             #want to reload page if POST successful, so no need to redirect here
+
+    #get initial data from cart
+    initial_data = [{'item_id': item.id,
+                     'quantity': int(item.quantity)} for item in cart]
+    formset = CartFormset(initial=initial_data)
+    #built-in cart total doesn't seem to work if not persisted to DB, so have to do it manually
+    item_prices = [item.total_price for item in cart]
+    total = sum(item_prices)
+
+    return render(request, 'cart/index.html',
+                  dict(cart=CartProxy(request), total=total, formset=formset))
+
+def remove_item(request, item_id=None):
+
+    if item_id is None:
+        return Http404('No item ID given, cannot remove item.')
+
+    cart = request.cart
+    cart.remove_item(int(item_id))
+    return HttpResponseRedirect(reverse('cart:cart'))
+
+
 

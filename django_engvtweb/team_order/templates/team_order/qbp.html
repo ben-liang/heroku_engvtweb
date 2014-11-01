@@ -44,13 +44,14 @@ $(function(){
 
 {% block contentmain %}
     <h2>Search the QBP Catalog</h2>
+
     <form method="get" action="." class="form-inline">
         <form class="form-inline" role="form">
-
+            {# Search form #}
             {% bootstrap_form form %}
             <button type="submit" class="btn btn-primary">{% bootstrap_icon "search" %}</button>
             {% if query or page.object_list %}
-{#            <h3>Results</h3>#}
+
                 {# Begin faceting here #}
                 <div class="form-group">
                     <label class="sr-only" for="brand-select">Brand</label>
@@ -85,7 +86,7 @@ $(function(){
                             </select>
                         {% endif %}
                 </div>
-        </form>
+            </form>
                 <br>
                 <table class="table table-hover table-condensed">
                     <thead>
@@ -98,46 +99,51 @@ $(function(){
                             <th>Add to Cart</th>
                         </tr>
                     </thead>
-                <tbody>
+                    <tbody>
                 {% for result in page.object_list %}
-                <tr>
-                    <td>{{ result.object.prodid }}</td>
-                    <td>{{ result.object.category}}</td>
-                    <td>{{ result.object.brand }}</td>
-                    <td><a target="_blank" href="https://www.google.com/search?q={{ result.object.product_description | urlencode}}">{{ result.object.product_description }}</a></td>
-                    <td>{{ result.object.unit_price|currency }}</td>
-                    <td>
-                        <form class="form-inline" role="form" method='post' action="{% url 'cart:cart-add' %}">
-                            <div class="form-group">
-                                {% csrf_token %}
-                                {% bootstrap_form result.object.cart_form %}
-                                <button type="submit" class="btn btn-primary">{% bootstrap_icon "shopping-cart" %}</button>
-                            </div>
-                        </form>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>{{ result.object.prodid }}</td>
+                        <td>{{ result.object.category}}</td>
+                        <td>{{ result.object.brand }}</td>
+                        <td><a target="_blank" href="https://www.google.com/search?q={{ result.object.product_description | urlencode}}">{{ result.object.product_description }}</a></td>
+                        <td>{{ result.object.unit_price|currency }}</td>
+                        <td>
+                            <form class="form-inline" role="form" method='post' action="{% url 'cart:cart-add' %}">
+                                <div class="form-group">
+                                    {% csrf_token %}
+                                    {% bootstrap_form result.object.cart_form %}
+                                    <button type="submit" class="btn btn-primary">{% bootstrap_icon "shopping-cart" %}</button>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
                 {% empty %}
-                 <div class="alert alert-danger alert-dismissable" role="alert">
-                      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        No results found.
-                    </div>
+
                 {% endfor %}
                 </tbody>
             </table>
 
             {% if page.has_previous or page.has_next %}
                 <div>
-                    {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}<button class="btn btn-primary">{% bootstrap_icon "chevron-left" %}Previous</button>{% if page.has_previous %}</a>{% endif %}
-                    |
+                    {% if page.has_previous %}
+                        <a href="?q={{ query }}&amp;page={{ page.previous_page_number }}"><button class="btn btn-primary">{% bootstrap_icon "chevron-left" %}Previous</button></a>
+                    {% endif %}
                     <span class="current">
                         Page {{ page.number }} of {{ page.paginator.num_pages }}.
                     </span>
-                    |
-                    {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}<button class="btn btn-primary">Next{% bootstrap_icon "chevron-right" %}</button>{% if page.has_next %}</a>{% endif %}
+                    {% if page.has_next %}
+                        <a href="?q={{ query }}&amp;page={{ page.next_page_number }}"><button class="btn btn-primary">Next{% bootstrap_icon "chevron-right" %}</button></a>
+                    {% endif %}
                 </div>
             {% endif %}
+
         {% else %}
-            {# Show some example queries to run, maybe query syntax, something else? #}
+
+            <div class="alert alert-danger alert-dismissable" role="alert">
+                      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        No results found.
+            </div>
+
         {% endif %}
     </form>
 {% endblock %}

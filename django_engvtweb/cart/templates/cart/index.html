@@ -39,8 +39,16 @@ $(function(){
                             </div>
                     </td>
                     <td>{{ item.total_price|currency }}</td>
-                    <td><button type="button" class="btn btn-danger btn-xs">{% bootstrap_icon "remove" %}</button></td>
+                    <td>
+                        <a class="btn btn-danger btn-xs" href="{% url "cart:remove-item" item_id=item.id %}">{% bootstrap_icon "remove" %}</a>
+                    </td>
                 </tr>
+            {% empty %}
+                    <tr>
+                        <td>
+                            <h4>No fucking items in your fucking cart.</h4>
+                        </td>
+                    </tr>
             {% endfor %}
             </tbody>
             <tfoot>
