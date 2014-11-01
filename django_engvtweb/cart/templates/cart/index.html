@@ -53,9 +53,9 @@ $(function(){
             </tbody>
             <tfoot>
                 <tr>
-                    <td></td>
                     <td><b>Total</b></td>
-                    <td><b>{{ total|currency }}</b></td>
+                    <td><b>{{ cart.cart.total_quantity|to_int }}</b></td>
+                    <td><b>{{ cart.cart.total_price|currency }}</b></td>
                     <td></td>
                 </tr>
             </tfoot>
