@@ -59,7 +59,8 @@ def render_shopping_cart(request):
                 if item.quantity != new_quantity:
                     if new_quantity == 0:
                         cart.remove_item(item_id)
-                    item.update_quantity(new_quantity)
+                    else:
+                        item.update_quantity(new_quantity)
              #want to reload page if POST successful, so no need to redirect here
 
     #get initial data from cart
