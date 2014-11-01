@@ -1,6 +1,5 @@
-from django.core.management.base import BaseCommand, CommandError
-from django_engvtweb.team_order.models import *
-from django_engvtweb.team_order.utils import import_new_qbpcatalog
+from django.core.management.base import BaseCommand
+from django_engvtweb.team_order.models import Bike, OtherPart
 from optparse import make_option
 
 class Command(BaseCommand):
