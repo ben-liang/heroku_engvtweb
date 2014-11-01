@@ -135,6 +135,7 @@ class Part(models.Model):
     description = models.CharField('description', max_length=64,null=True,blank=True)
     msrp = models.FloatField('msrp', null=True, blank=True)
     unit_price = models.FloatField('unit_price')
+    active = models.BooleanField(default=True)
 
     def __unicode__(self):
         return '%s' % self.name
