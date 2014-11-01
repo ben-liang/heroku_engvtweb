@@ -104,7 +104,7 @@ $(function(){
                     <tr>
                         <td>{{ result.object.prodid }}</td>
                         <td>{{ result.object.category}}</td>
-                        <td>{{ result.object.brand }}</td>
+                        <td>{{ result.object.brand.name }}</td>
                         <td><a target="_blank" href="https://www.google.com/search?q={{ result.object.product_description | urlencode}}">{{ result.object.product_description }}</a></td>
                         <td>{{ result.object.unit_price|currency }}</td>
                         <td>
