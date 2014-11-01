@@ -16,7 +16,11 @@ def include_jquery(version='2.1.1'):
 
 @register.filter()
 def currency(dollars):
-    dollars = round(float(dollars), 2)
+    try:
+        f_dollars = float(dollars)
+    except:
+        return dollars
+    dollars = round(float(f_dollars), 2)
     return "$%s%s" % (intcomma(int(dollars)), ("%0.2f" % dollars)[-3:])
 
 @register.filter()
