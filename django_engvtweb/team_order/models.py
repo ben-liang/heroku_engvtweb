@@ -53,3 +53,54 @@ class QbpPart(models.Model):
         """
         return cls.__name__.lower()
 
+class BikeBrand(models.Model):
+    name = models.CharField('name', max_length=32)
+
+class BikeCategory(models.Model):
+    name = models.CharField('category', max_length=32)
+
+class Bike(models.Model):
+    tstamp = models.DateTimeField('tstamp', auto_now_add=True)
+    brand = models.ForeignKey(BikeBrand)
+    category = models.ForeignKey(BikeCategory)
+    name = models.CharField('name', max_length=32)
+    description = models.CharField('description', max_length=64)
+    msrp = models.FloatField('msrp', null=True, blank=True)
+    unit_price = models.FloatField('unit_price')
+
+    @classmethod
+    def get_slug_name(cls):
+        """
+        Used for purposes of storing content_type names to use with
+        shopping cart, which can contain multiple types of objects
+        """
+        return cls.__name__.lower()
+
+class OtherPartVendor(models.Model):
+    name = models.CharField('name', max_length=32)
+
+class OtherPartCategory(models.Model):
+    name = models.CharField('name', max_length=32)
+
+class OtherPart(models.Model):
+    tstamp = models.DateTimeField('tstamp', auto_now_add=True)
+    brand = models.ForeignKey(OtherPartVendor)
+    category = models.ForeignKey(OtherPartCategory)
+    model_no = models.CharField('model_no',max_length=16, null=True, blank=True)
+    name = models.CharField('name',max_length=32)
+    description = models.CharField('name',max_length=64, null=True, blank=True)
+    msrp = models.FloatField('msrp', null=True, blank=True)
+    unit_price = models.FloatField('unit_price')
+
+    @classmethod
+    def get_slug_name(cls):
+        """
+        Used for purposes of storing content_type names to use with
+        shopping cart, which can contain multiple types of objects
+        """
+        return cls.__name__.lower()
+
+
+
+
+
