@@ -1,18 +1,10 @@
-__author__ = 'bliang'
-
 import pandas
 import os
 from django.db.transaction import atomic
-from .models import *
+from models import *
 
 BOOLEAN_VALS = {'Yes': True, 'No': False}
 DEFAULT_PARTS_FILE = os.path.expanduser('~/qbpcatalog.txt')
-
-def removeNonAscii(s):
-    if isinstance(s, basestring):
-        return "".join(i for i in s if ord(i)<128)
-    else:
-        return s
 
 @atomic
 def import_new_qbpcatalog(file):
@@ -68,6 +60,3 @@ def import_new_qbpcatalog(file):
         parts_objs.append(part)
     #finally, bulk create all parts
     QbpPart.objects.bulk_create(parts_objs)
-
-if __name__ == "__main__":
-    import_new_qbpcatalog(DEFAULT_PARTS_FILE)

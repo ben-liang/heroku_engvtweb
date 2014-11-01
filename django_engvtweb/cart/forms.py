@@ -1,6 +1,5 @@
 from django import forms
 from django.forms.formsets import formset_factory
-import changuito
 
 class AddToCartForm(forms.Form):
     object_id = forms.IntegerField(widget=forms.HiddenInput)
