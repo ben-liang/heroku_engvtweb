@@ -64,12 +64,8 @@ def render_shopping_cart(request):
     initial_data = [{'item_id': item.id,
                      'quantity': int(item.quantity)} for item in cart]
     formset = CartFormset(initial=initial_data)
-    #built-in cart total doesn't seem to work if not persisted to DB, so have to do it manually
-    item_prices = [item.total_price for item in cart]
-    total = sum(item_prices)
-
     return render(request, 'cart/index.html',
-                  dict(cart=CartProxy(request), total=total, formset=formset))
+                  dict(cart=CartProxy(request), formset=formset))
 
 def remove_item(request, item_id=None):
 
