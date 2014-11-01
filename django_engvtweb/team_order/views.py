@@ -2,12 +2,11 @@ from haystack.views import FacetedSearchView
 from haystack.query import SearchQuerySet
 from django_engvtweb.cart.forms import *
 from django.shortcuts import render
+from models import *
 #searchqueryset that is passed into view class
 qbp_sqs = SearchQuerySet().order_by('category', 'brand').\
     facet('category', size=2000, order='term').\
     facet('brand', size=2000, order='term')
-
-QBPPART_STRING = 'QbpPart'
 
 class QBPSearchView(FacetedSearchView):
     def build_page(self):
@@ -18,7 +17,7 @@ class QBPSearchView(FacetedSearchView):
 
         #now instantiate forms for each object in results
         forms = [AddToCartForm(initial={'object_id': res.object.id,
-                                        'object_type': QBPPART_STRING})
+                                        'object_type': QbpPart.get_slug_name()})
                                         for res in this_page_results]
 
         #modify objects to add "cart_form" attr and reattach to page

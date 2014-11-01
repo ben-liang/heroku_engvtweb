@@ -44,3 +44,12 @@ class QbpPart(models.Model):
 
     def __unicode__(self):
         return '%s' % self.product_description
+
+    @classmethod
+    def get_slug_name(cls):
+        """
+        Used for purposes of storing content_type names to use with
+        shopping cart, which can contain multiple types of objects
+        """
+        return cls.__name__.lower()
+
