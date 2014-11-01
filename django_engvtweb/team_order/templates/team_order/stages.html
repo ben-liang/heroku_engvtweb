@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
-{% load bootstrap3 %}
-{% load engvtweb_tags %}
+
+{% block head %}
+    {% include 'team_order/include/hide-field-labels.html' %}
+{% endblock %}
 
 {% block contentmain %}
-    stages stuff goes here
+    <h3>Stages Powermeters</h3>
+    {% include 'team_order/include/product_list.html' %}
 {% endblock %}

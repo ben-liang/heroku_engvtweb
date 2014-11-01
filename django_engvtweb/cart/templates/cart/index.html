@@ -31,7 +31,13 @@ $(function(){
             <tbody>
             {% for item in cart %}
                 <tr>
-                    <td>{{ item.product.product_description }}</td>
+                    <td>
+                        {% if item.product.product_description %}
+                            {{ item.product.product_description }}
+                        {% else %}
+                            {{ item.product.name }}
+                        {% endif %}
+                    </td>
                     {% get_item formset forloop.counter0 as form %}
                     <td>
                             <div style="max-width: 80px">

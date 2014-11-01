@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 from forms import *
-from django_engvtweb.team_order.models import QbpPart
+from django_engvtweb.team_order.models import QbpPart, Bike, OtherPart
 from changuito import CartProxy
 
 #map of models to strings used in forms to reference
@@ -14,6 +14,8 @@ from changuito import CartProxy
 
 PRODUCT_MODELS = {
     QbpPart.get_slug_name(): QbpPart,
+    Bike.get_slug_name(): Bike,
+    OtherPart.get_slug_name(): OtherPart,
 }
 
 def add_item_to_shopping_cart(request):

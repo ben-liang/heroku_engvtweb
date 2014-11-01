@@ -28,8 +28,16 @@ class QBPSearchView(FacetedSearchView):
         return (paginator, page)
 
 def render_bike(request):
-    return render(request, 'team_order/bike.html', {})
+    products = Bike.objects.filter(active=True)
+    forms = [AddToCartForm(initial={'object_id': b.id,
+                                    'object_type': Bike.get_slug_name()})
+                                    for b in products]
+    return render(request, 'team_order/bike.html', {'products': products, 'forms': forms})
 
 def render_stages(request):
-    return render(request, 'team_order/stages.html', {})
+    products = OtherPart.objects.filter(active=True, brand__name='Stages')
+    forms = [AddToCartForm(initial={'object_id': b.id,
+                                    'object_type': OtherPart.get_slug_name()})
+                                    for b in products]
+    return render(request, 'team_order/stages.html', {'products': products, 'forms': forms})
 
