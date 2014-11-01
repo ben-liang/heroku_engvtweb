@@ -131,7 +131,7 @@ class Part(models.Model):
 
     tstamp = models.DateTimeField('tstamp', auto_now_add=True)
     model_no = models.CharField('model_no',max_length=16, null=True, blank=True)
-    name = models.CharField('name', max_length=32)
+    name = models.CharField('name', max_length=64)
     description = models.CharField('description', max_length=64,null=True,blank=True)
     msrp = models.FloatField('msrp', null=True, blank=True)
     unit_price = models.FloatField('unit_price')
