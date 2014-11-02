@@ -9,5 +9,17 @@ $(function(){
 {% endblock %}
 
 {% block contentmain %}
-Stuf
+<div style="max-width: 600px" class="center-block">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><h4>My Account</h4></div>
+        <div class="panel-body">
+            <ul class="list-group">
+              <li class="list-group-item"><a href="#">My Orders</a></li>
+              <li class="list-group-item"><a href="{% url 'django.contrib.auth.views.password_change' %}">Change My Password</a></li>
+              <li class="list-group-item"><a href="{% url 'django.contrib.auth.views.logout' %}">Log Out</a></li>
+              <li class="list-group-item"><a href="#">Door's Open</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
 {% endblock %}
