@@ -5,9 +5,6 @@ from datetime import datetime
 from django_engvtweb import SITE_NAME
 from tabulate import tabulate
 
-HTML_ORDER_CONFIRMATION_TEMPLATE = get_template('email/order_confirmation.html')
-TEXT_ORDER_CONFIRMATION_TEMPLATE = get_template('email/order_confirmation.txt')
-
 def tabulate_cart(cart):
     items = cart.item_set.all()
     rows = []
@@ -24,8 +21,9 @@ def tabulate_cart(cart):
     headers = ['Product', 'Quantity', 'Price']
     return unicode(tabulate(rows, headers=headers))
 
-def send_order_confirmation(cart, user, time, html_template=HTML_ORDER_CONFIRMATION_TEMPLATE,
-                            text_template=TEXT_ORDER_CONFIRMATION_TEMPLATE, subject=None):
+def send_order_confirmation(cart, user, time, subject=None):
+    html_template = get_template('email/order_confirmation.html')
+    text_template = get_template('email/order_confirmation.txt')
     d = {'order_number': cart.id,
          'username': user.username,
          'tstamp': time.strftime("%A, %B %d %Y %H:%M:%S"),
