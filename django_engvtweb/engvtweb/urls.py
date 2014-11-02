@@ -17,5 +17,6 @@ urlpatterns = patterns('',
     url(r'^cart/', include('django_engvtweb.cart.urls', namespace='cart')),
     url(r'^search/', include('haystack.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^accounts/', include('django.contrib.auth.urls'))
+    url(r'^accounts/', include('django.contrib.auth.urls')),
+    url(r'^my-account/', views.my_account, name='my-account'),
 )
