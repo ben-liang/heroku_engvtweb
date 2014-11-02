@@ -53,7 +53,8 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="{% url 'cart:cart' %}">My Cart {% bootstrap_icon "shopping-cart" %}<span class="badge">{{ shopping_cart.total_quantity|to_int}}</span></a></li>
-        <li><a href="/admin">Admin</a></li>
+        <li><a href="{% url 'my-account' %}">My Account {% bootstrap_icon "user" %}</a></li>
+        {% if user.is_staff %}<li><a href="/admin">Admin</a></li>{% endif %}
         <li><a href="{% url 'django.contrib.auth.views.logout' %}">Log Out</a></li>
       </ul>
       {% endif %}
