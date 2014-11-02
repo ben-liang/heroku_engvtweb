@@ -10,6 +10,7 @@
             <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
             {% csrf_token %}
             {% bootstrap_form form %}
+            <p><a href="{% url 'django.contrib.auth.views.password_reset' %}">Forgot your password?</a></p>
             <input type="submit" value="Login" class="btn btn-primary"/>
             <input type="hidden" name="next" value="{{ next }}" />
             </form>

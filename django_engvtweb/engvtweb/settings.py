@@ -91,8 +91,9 @@ INSTALLED_APPS = (
 ]))
 
 #for custom LoginRequiredMiddleware
-LOGIN_URL = 'accounts/login/'
+LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
+LOGIN_EXEMPT_URLS = ('accounts/*',)
 
 # ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window for django-registration
 
