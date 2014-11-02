@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block contentmain %}
+<div class="jumbotron">
+    <h1>You're been logged out.</h1>
+    <p>We hope it was good for you, too.</p>
+      <a class="btn btn-lg btn-primary" href="{% url 'django.contrib.auth.views.login' %}" role="button">Log back in &raquo;</a>
+    </p>
+</div>
+{% endblock %}

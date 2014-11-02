@@ -16,5 +16,6 @@ urlpatterns = patterns('',
     url(r'^team_order/', include('django_engvtweb.team_order.urls', namespace='team_order')),
     url(r'^cart/', include('django_engvtweb.cart.urls', namespace='cart')),
     url(r'^search/', include('haystack.urls')),
-    url(r'^admin/', include(admin.site.urls))
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'^accounts/', include('django.contrib.auth.urls'))
 )

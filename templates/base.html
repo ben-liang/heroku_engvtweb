@@ -28,12 +28,14 @@
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-
+    {% if user.is_authenticated %}
       <a class="navbar-brand" href="#"><img src="{% static "img/ENGVT_Logo_2D.png" %}"></a>
+    {% endif %}
     </div>
 
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
+        {% if user.is_authenticated %}
         <li class="active"><a href="/">Home</a></li>
 {#        <li><a href="#about">About</a></li>#}
 {#        <li><a href="#contact">Contact</a></li>#}
@@ -52,7 +54,9 @@
       <ul class="nav navbar-nav navbar-right">
         <li><a href="{% url 'cart:cart' %}">My Cart {% bootstrap_icon "shopping-cart" %}<span class="badge">{{ shopping_cart.total_quantity|to_int}}</span></a></li>
         <li><a href="/admin">Admin</a></li>
+        <li><a href="{% url 'django.contrib.auth.views.logout' %}">Log Out</a></li>
       </ul>
+      {% endif %}
     </div><!--/.nav-collapse -->
   </div>
 </div>

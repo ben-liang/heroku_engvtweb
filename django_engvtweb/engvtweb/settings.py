@@ -90,6 +90,11 @@ INSTALLED_APPS = (
     'cart',
 ]))
 
+#for custom LoginRequiredMiddleware
+LOGIN_URL = 'accounts/login/'
+LOGIN_REDIRECT_URL = '/'
+
+# ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window for django-registration
 
 #Heroku SearchBox (ElasticSearch add-on) configuration
 es = urlparse(os.environ.get('SEARCHBOX_URL') or 'http://127.0.0.1:9200/')
@@ -115,6 +120,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'changuito.middleware.CartMiddleware',
+    'django_engvtweb.engvtweb.middleware.LoginRequiredMiddleware'
 )
 
 ROOT_URLCONF = _engvtimport('engvtweb.urls')

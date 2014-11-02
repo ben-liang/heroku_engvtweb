@@ -1,0 +1,18 @@
+{% load bootstrap3 %}
+
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+<div style="width: 300px" class="center-block">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><h4>Login Required</h4></div>
+        <div class="panel-body">
+            <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <input type="submit" value="Login" class="btn btn-primary"/>
+            <input type="hidden" name="next" value="{{ next }}" />
+            </form>
+        </div>
+    </div>
+</div>
