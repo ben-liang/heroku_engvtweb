@@ -18,7 +18,7 @@ class QBPSearchView(FacetedSearchView):
         #now instantiate forms for each object in results
         forms = [AddToCartForm(initial={'object_id': res.object.id,
                                         'object_type': QbpPart.get_slug_name()})
-                                        for res in this_page_results]
+                 for res in this_page_results]
 
         #modify objects to add "cart_form" attr and reattach to page
         for i in range(len(forms)):
@@ -29,14 +29,14 @@ class QBPSearchView(FacetedSearchView):
 
 def render_bike(request):
     products = Bike.objects.filter(active=True)
-    forms = [AddToCartForm(initial={'object_id': b.id,
+    forms = [AddToCartWithVariantForm(initial={'object_id': b.id,
                                     'object_type': Bike.get_slug_name()})
                                     for b in products]
     return render(request, 'team_order/bike.html', {'products': products, 'forms': forms})
 
 def render_stages(request):
     products = OtherPart.objects.filter(active=True, brand__name='Stages')
-    forms = [AddToCartForm(initial={'object_id': b.id,
+    forms = [AddToCartWithVariantForm(initial={'object_id': b.id,
                                     'object_type': OtherPart.get_slug_name()})
                                     for b in products]
     return render(request, 'team_order/stages.html', {'products': products, 'forms': forms})

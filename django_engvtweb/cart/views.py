@@ -41,6 +41,30 @@ def add_item_to_shopping_cart(request):
     else:
         return Http404()
 
+def add_item_with_variant_to_shopping_cart(request):
+    """
+    Handles addition of items with Variant fields to the shopping cart.
+    Call from any product page as POST from an AddToCart form.
+
+    :param request:
+    :return: HttpResponseRedirect to cart
+    """
+
+    if request.method == 'POST':
+        form = AddToCartWithVariantForm(request.POST)
+        if form.is_valid():
+            quantity = int(form.cleaned_data['quantity'])
+            object_type = form.cleaned_data['object_type']
+            obj_id = form.cleaned_data['object_id']
+            variant = form.cleaned_data['variant']
+            model = PRODUCT_MODELS[object_type]
+            product = model.objects.get(id=obj_id)
+            cart = request.cart
+            cart.add(product, product.unit_price, quantity, variant=variant)
+            return HttpResponseRedirect(reverse('cart:cart'))
+    else:
+        return Http404()
+
 def render_shopping_cart(request):
     """
     Renders shopping cart index, and also handles updating of totals through formset rendered on page.
@@ -65,7 +89,8 @@ def render_shopping_cart(request):
 
     #get initial data from cart
     initial_data = [{'item_id': item.id,
-                     'quantity': int(item.quantity)} for item in cart]
+                     'quantity': int(item.quantity),
+                     'variant': item.variant} for item in cart]
     formset = CartFormset(initial=initial_data)
     return render(request, 'cart/index.html',
                   dict(cart=CartProxy(request), formset=formset))
@@ -78,6 +103,3 @@ def remove_item(request, item_id=None):
     cart = request.cart
     cart.remove_item(int(item_id))
     return HttpResponseRedirect(reverse('cart:cart'))
-
-
-

@@ -23,6 +23,7 @@ $(function(){
             <thead>
                 <tr>
                     <th>Product</th>
+                    <th>Size</th>
                     <th>Quantity</th>
                     <th>Total Price</th>
                     <th></th>
@@ -40,9 +41,12 @@ $(function(){
                     </td>
                     {% get_item formset forloop.counter0 as form %}
                     <td>
-                            <div style="max-width: 80px">
-                            {% bootstrap_form form %}
-                            </div>
+                        {% if item.variant %}{{ item.variant }}{% endif %}
+                    </td>
+                    <td>
+                        <div style="max-width: 80px">
+                        {% bootstrap_form form %}
+                        </div>
                     </td>
                     <td>{{ item.total_price|currency }}</td>
                     <td>
@@ -60,6 +64,7 @@ $(function(){
             <tfoot>
                 <tr>
                     <td><b>Total</b></td>
+                    <td></td>
                     <td><b>{{ cart.cart.total_quantity|to_int }}</b></td>
                     <td><b>{{ cart.cart.total_price|currency }}</b></td>
                     <td></td>
