@@ -117,17 +117,17 @@ def render_checkout(request):
         #send user order confirm first
         user = request.user
         tstamp = datetime.utcnow()
-        try:
-            send_order_confirmation(cart, user, tstamp)
-        except:
-            pass #NEED TO FIX THIS
-        try:
-            group = Group.objects.get(name='Order Admins')
-            for u in group.user_set.all():
-                subject = '%s just placed an order on %s' % (u.username,SITE_NAME)
-                send_order_confirmation(cart, u, tstamp, subject=subject)
-        except:
-            pass #NEED TO FIX THIS
+        # try:
+        send_order_confirmation(cart, user, tstamp)
+        # except:
+        #     pass #NEED TO FIX THIS
+        # try:
+        group = Group.objects.get(name='Order Admins')
+        for u in group.user_set.all():
+            subject = '%s just placed an order on %s' % (u.username,SITE_NAME)
+            send_order_confirmation(cart, u, tstamp, subject=subject)
+        # except:
+        #     pass #NEED TO FIX THIS
 
         return HttpResponseRedirect(reverse('cart:checkout-done'))
     return render(request, 'cart/checkout.html',
