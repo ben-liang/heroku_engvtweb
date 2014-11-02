@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
 
 {% block head %}
-    {% include 'team_order/include/hide-field-labels.html' %}
+<script type="text/javascript">
+$(function(){
+    activate_link('Team Order');
+})
+</script>
+{% include 'team_order/include/hide-field-labels.html' %}
 {% endblock %}
 
 {% block contentmain %}

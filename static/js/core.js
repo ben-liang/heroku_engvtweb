@@ -58,7 +58,7 @@ function activate_link(link_inner_text){
     var hrefs = $('.nav').children().children();
     for (var i= 0; i < hrefs.length; i++) {
         var a = hrefs[i];
-        if (a.innerText == link_inner_text) {
+        if (a.innerText.match(link_inner_text)) {
             a.parentElement.setAttribute('class', 'active');
         }
     }
