@@ -1,0 +1,18 @@
+{% load i18n %}{% autoescape on %}
+
+{% block email %}
+Your order has been submitted.
+
+Please keep a copy of this for your records.
+
+----Order Info-----
+Order No: {{ order_number }}
+Username: {{ username }}
+Date Received: {{ tstamp }}
+
+---Order Details---
+{{ item_table }}
+
+{% endblock %}
+
+{% endautoescape %}

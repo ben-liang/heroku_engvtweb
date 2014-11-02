@@ -23,7 +23,7 @@ def tabulate_cart(cart):
 
 def send_order_confirmation(cart, user, time, subject=None):
     html_template = get_template('email/order_confirmation.html')
-    text_template = get_template('email/order_confirmation.txt')
+    text_template = get_template('email/order_confirmation')
     d = {'order_number': cart.id,
          'username': user.username,
          'tstamp': time.strftime("%A, %B %d %Y %H:%M:%S"),
