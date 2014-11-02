@@ -4,6 +4,10 @@ from django.core.urlresolvers import reverse
 from forms import *
 from django_engvtweb.team_order.models import QbpPart, Bike, OtherPart
 from changuito import CartProxy
+from django.contrib.auth.models import User, Group
+from django_engvtweb.cart.mail import send_order_confirmation
+from datetime import datetime
+from django_engvtweb import SITE_NAME
 
 #map of models to strings used in forms to reference
 #each model.  Doing this just to avoid having to do an "eval(str)"
@@ -107,7 +111,24 @@ def remove_item(request, item_id=None):
 def render_checkout(request):
     cart = request.cart
     if request.method == 'POST':
-        cart.checkout()
+        cart = cart.checkout()
+
+        #TODO: Need to make this a post-save signal, this will break if email fails
+        #send user order confirm first
+        user = request.user
+        tstamp = datetime.utcnow()
+        try:
+            send_order_confirmation(cart, user, tstamp)
+        except:
+            pass #NEED TO FIX THIS
+        try:
+            group = Group.objects.get(name='Order Admins')
+            for u in group.user_set.all():
+                subject = '%s just placed an order on %s' % (u.username,SITE_NAME)
+                send_order_confirmation(cart, u, tstamp, subject=subject)
+        except:
+            pass #NEED TO FIX THIS
+
         return HttpResponseRedirect(reverse('cart:checkout-done'))
     return render(request, 'cart/checkout.html',
                   dict(cart=CartProxy(request)))

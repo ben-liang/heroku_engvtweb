@@ -1,0 +1,52 @@
+{% load engvtweb_tags %}
+<!DOCTYPE html>
+<html>
+<body>
+
+<h3>Your order has been submitted.</h3>
+
+Please keep a copy of this for your records.
+<br>
+
+<h4>Order Info</h4>
+<p>Order No: {{ order_number }}</p>
+<p>Username: {{ username }}</p>
+<p>Date Received: {{ tstamp }}</p>
+
+<h4>Order Details</h4>
+<table>
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Size</th>
+            <th>Quantity</th>
+            <th>Total Price</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in cart_items %}
+        <tr>
+            <td>
+                {% if item.product.product_description %}
+                    {{ item.product.product_description }}
+                {% else %}
+                    {{ item.product.name }}
+                {% endif %}
+            </td>
+            <td>{% if item.variant %}{{ item.variant }}{% endif %}</td>
+            <td>{{ item.quantity|to_int }}</td>
+            <td>{{ item.total_price|currency }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td><b>Total</b></td>
+            <td></td>
+            <td><b>{{ cart.total_quantity|to_int }}</b></td>
+            <td><b>{{ cart.total_price|currency }}</b></td>
+        </tr>
+    </tfoot>
+</table>
+</body>
+</html>

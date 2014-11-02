@@ -16,3 +16,5 @@ def repository_path(*paths):
     """
     return os.path.abspath(os.path.join(PARENT_DIR, *paths))
 
+SITE_NAME = 'ENGVTWeb'
+
