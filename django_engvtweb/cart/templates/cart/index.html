@@ -72,10 +72,12 @@ $(function(){
             </tfoot>
         </table>
     </div>
+    {% if not cart.is_empty %}
     <div style="text-align: right">
         <button class="btn btn-primary" type="submit">Update Totals {% bootstrap_icon "refresh" %}</button>
-        <a class="btn btn-success" role="button" href="#">Checkout {% bootstrap_icon "forward" %}</a>
+        <a class="btn btn-success" role="button" href="{% url 'cart:checkout' %}">Checkout {% bootstrap_icon "forward" %}</a>
     </div>
+    {% endif %}
 </form>
 
 

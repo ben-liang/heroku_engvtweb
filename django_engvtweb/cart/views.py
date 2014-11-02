@@ -103,3 +103,14 @@ def remove_item(request, item_id=None):
     cart = request.cart
     cart.remove_item(int(item_id))
     return HttpResponseRedirect(reverse('cart:cart'))
+
+def render_checkout(request):
+    cart = request.cart
+    if request.method == 'POST':
+        cart.checkout()
+        return HttpResponseRedirect(reverse('cart:checkout-done'))
+    return render(request, 'cart/checkout.html',
+                  dict(cart=CartProxy(request)))
+
+def render_checkout_done(request):
+    return render(request, 'cart/checkout_done.html')

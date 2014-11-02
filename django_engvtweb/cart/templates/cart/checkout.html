@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load engvtweb_tags %}
+
+{% block head %}
+<script type="text/javascript">
+$(function(){
+    activate_link('My Cart ')
+});
+</script>
+{% endblock %}
+
+{% block contentmain %}
+
+<div style="max-width: 800px" class="center-block">
+    <div class="panel panel-info">
+        <div class="panel-heading"><h3>Please confirm your order below.</h3></div>
+        <div class="panel-body">
+            <table class="table table-hover table-striped table-condensed">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Size</th>
+                        <th>Quantity</th>
+                        <th>Total Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in cart %}
+                    <tr>
+                        <td>
+                            {% if item.product.product_description %}
+                                {{ item.product.product_description }}
+                            {% else %}
+                                {{ item.product.name }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if item.variant %}{{ item.variant }}{% endif %}
+                        </td>
+                        <td>
+                            <div style="max-width: 80px">
+                            {{ item.quantity|to_int }}
+                            </div>
+                        </td>
+                        <td>{{ item.total_price|currency }}</td>
+                    </tr>
+                {% empty %}
+                        <tr>
+                            <td>
+                                <h4>There are no items in your cart, you can't checkout.</h4>
+                            </td>
+                        </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td><b>Total</b></td>
+                        <td></td>
+                        <td><b>{{ cart.cart.total_quantity|to_int }}</b></td>
+                        <td><b>{{ cart.cart.total_price|currency }}</b></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    {% if not cart.is_empty %}
+    <div style="text-align: right">
+        <form method="post" action=".">
+        {% csrf_token %}
+        <a class="btn btn-danger" href="{% url 'cart:cart' %}">{% bootstrap_icon "backward" %} Go back</a>
+        <button class="btn btn-success" role="button" type="submit"><b>Submit</b></button>
+        </form>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

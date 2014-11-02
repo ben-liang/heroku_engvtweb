@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+{% load i18n grp_tags %}
+
+{% block head %}
+<script type="text/javascript">
+$(function(){
+    activate_link('My Cart ')
+});
+</script>
+{% endblock %}
+
+{% block contentmain %}
+	<div style="width: 600px" class="center-block">
+        <div class="alert alert-success" role="alert">
+            <h4>Order Submitted</h4>
+                <p>Your order has been submitted.</p>
+                <p>A receipt has been sent to <b>{{ user.email }}</b>. Or at least it should have been.</p>
+        </div>
+    </div>
+{% endblock %}
