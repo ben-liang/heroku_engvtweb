@@ -8,7 +8,7 @@
 {# Hack to hide "search" label, no good way around this #}
 function select_facet(field_name, id){
     var facet_value = $('#'+id).val().split(' (')[0];
-    var encoded_val = encodeURI(facet_value);
+    var encoded_val = encodeURIComponent(facet_value);
     var current_url = window.location.href;
 
     //have to have q value in URL otherwise empty searchqueryset will be rendered
