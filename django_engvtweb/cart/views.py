@@ -124,7 +124,7 @@ def render_checkout(request):
         try:
             group = Group.objects.get(name='Order Admins')
             for u in group.user_set.all():
-                subject = '%s just placed an order on %s' % (u.username,SITE_NAME)
+                subject = '%s just placed an order on %s' % (user.username,SITE_NAME)
                 send_order_confirmation(cart, u, tstamp, subject=subject)
         except:
             pass #NEED TO FIX THIS
