@@ -8,6 +8,11 @@ class TeamOrderAdmin(admin.ModelAdmin):
     search_fields = ['name']
     list_filter = ['active','administrator']
 
+class OrderToCartAdmin(admin.ModelAdmin):
+    list_display = ['tstamp','team_order','cart']
+    list_filter = ['team_order']
+    search_fields = ['team_order','cart']
+
 class QBPPartsAdmin(admin.ModelAdmin):
     list_display = ['prodid', 'category', 'brand', 'model_description',
                     'size','color','msrp','unit_price','product_description']
@@ -50,6 +55,7 @@ class OtherPartAdmin(admin.ModelAdmin):
     list_filter = ['category','brand','active']
 
 admin.site.register(TeamOrder,TeamOrderAdmin)
+admin.site.register(OrdersToCarts,OrderToCartAdmin)
 admin.site.register(QbpPart,QBPPartsAdmin)
 admin.site.register(QbpBrand,QBPBrandsAdmin)
 admin.site.register(BikeBrand,BikeBrandsAdmin)

@@ -24,6 +24,9 @@ class TeamOrder(models.Model):
     due_date = models.DateTimeField('due_date')
     submitted_date = models.DateTimeField('submitted_date', null=True, blank=True)
     administrator = models.ForeignKey(User)
+    #wanted to make this a FK on Cart but couldn't b/c it is installed as a
+    #site-package.
+    carts = models.ManyToManyField('changuito.Cart',through='OrdersToCarts')
 
     def delete(self, *args, **kwargs):
         if self.name == TOMBSTONE_ORDER_NAME:
@@ -33,6 +36,11 @@ class TeamOrder(models.Model):
 
     def __unicode__(self):
         return '%s' % self.name
+
+class OrdersToCarts(models.Model):
+    tstamp = models.DateTimeField(auto_now_add=True)
+    cart = models.ForeignKey('changuito.Cart')
+    team_order = models.ForeignKey(TeamOrder)
 
 class PartBrandOrCategory(models.Model):
     """
