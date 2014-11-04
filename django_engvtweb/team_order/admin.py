@@ -2,6 +2,12 @@ __author__ = 'bliang'
 from django.contrib import admin
 from .models import *
 
+class TeamOrderAdmin(admin.ModelAdmin):
+    list_display = ['tstamp','name','active','due_date','submitted_date','administrator']
+    date_hierarchy = 'tstamp'
+    search_fields = ['name']
+    list_filter = ['active','administrator']
+
 class QBPPartsAdmin(admin.ModelAdmin):
     list_display = ['prodid', 'category', 'brand', 'model_description',
                     'size','color','msrp','unit_price','product_description']
@@ -43,6 +49,7 @@ class OtherPartAdmin(admin.ModelAdmin):
     search_fields = ['brand','category','name','description']
     list_filter = ['category','brand','active']
 
+admin.site.register(TeamOrder,TeamOrderAdmin)
 admin.site.register(QbpPart,QBPPartsAdmin)
 admin.site.register(QbpBrand,QBPBrandsAdmin)
 admin.site.register(BikeBrand,BikeBrandsAdmin)

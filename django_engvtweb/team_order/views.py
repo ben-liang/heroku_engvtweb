@@ -3,6 +3,7 @@ from haystack.query import SearchQuerySet
 from django_engvtweb.cart.forms import *
 from django.shortcuts import render
 from models import *
+
 #searchqueryset that is passed into view class
 qbp_sqs = SearchQuerySet().order_by('category', 'brand').\
     facet('category', size=2000, order='term').\

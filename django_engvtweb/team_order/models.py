@@ -2,12 +2,37 @@ __author__ = 'bliang'
 from django.db import models
 import pandas
 from django.db.transaction import atomic
+from django.conf import settings
+
+User = settings.AUTH_USER_MODEL
 
 def removeNonAscii(s):
     if isinstance(s, basestring):
         return "".join(i for i in s if ord(i)<128)
     else:
         return s
+
+TOMBSTONE_ORDER_NAME = '###TOMBSTONEORDDER_DONOTDELETE###'
+
+class TeamOrder(models.Model):
+
+    class Meta:
+        pass
+    tstamp = models.DateTimeField(auto_now_add=True)
+    name = models.CharField('name',max_length=32)
+    active = models.BooleanField('active', default=True)
+    due_date = models.DateTimeField('due_date')
+    submitted_date = models.DateTimeField('submitted_date', null=True, blank=True)
+    administrator = models.ForeignKey(User)
+
+    def delete(self, *args, **kwargs):
+        if self.name == TOMBSTONE_ORDER_NAME:
+            raise Exception('You cannot delete the tombstone order, stuff will break')
+        else:
+            super(TeamOrder, self).delete(*args, **kwargs)
+
+    def __unicode__(self):
+        return '%s' % self.name
 
 class PartBrandOrCategory(models.Model):
     """
