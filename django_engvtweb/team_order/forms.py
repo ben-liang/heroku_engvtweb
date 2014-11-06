@@ -1,5 +1,5 @@
 from haystack.forms import FacetedSearchForm
-from django.forms import ModelChoiceField, Form
+from django.forms import ModelChoiceField, Form, EmailField
 from django_engvtweb.team_order.models import TeamOrder
 
 class QbpForm(FacetedSearchForm):
@@ -10,3 +10,8 @@ class QbpForm(FacetedSearchForm):
 class TeamOrderForm(Form):
 
     team_order = ModelChoiceField(queryset=TeamOrder.objects.all())
+
+class EmailOrderForm(Form):
+
+    # order =
+    email = EmailField()
