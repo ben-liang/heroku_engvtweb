@@ -12,4 +12,5 @@ urlpatterns = patterns('',
                                 searchqueryset=qbp_sqs), name='qbp'),
     url(r'^bike/', BikeList.as_view(), name='bike'),
     url(r'^stages/', OtherPartList.as_view(brand_name='Stages',title='Stages Powermeters'), name='stages'),
+    url(r'^team-order-details/', TeamOrderDetailsView.as_view(), name='team-order-details')
 )

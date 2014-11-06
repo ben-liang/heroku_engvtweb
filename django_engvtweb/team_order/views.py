@@ -122,9 +122,9 @@ class TeamOrderDetailsView(View):
         return df
 
     def get(self, request):
-        form = TeamOrderForm()
-
-        return render(request, self.template_name, {'form': form})
+        # form = TeamOrderForm()
+        df = self.get_all_order_items(TeamOrder.objects.get(id=2))
+        return render(request, self.template_name, {})
 
     def post(self):
         pass
