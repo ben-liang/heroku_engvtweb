@@ -137,12 +137,12 @@ class QbpPart(models.Model):
     width = models.FloatField('width')
     height = models.FloatField('height')
     ormd = models.BooleanField(default=False)
-    product_description = models.CharField('product_description', max_length=128)
+    description = models.CharField('description', max_length=128)
     replacement = models.CharField('replacement', max_length=64, null=True, blank=True)
     substitute = models.CharField('substitute', max_length=64, null=True, blank=True)
 
     def __unicode__(self):
-        return '%s' % self.product_description
+        return '%s' % self.description
 
     @classmethod
     def get_slug_name(cls):
@@ -163,7 +163,7 @@ class Part(models.Model):
         abstract = True
 
     tstamp = models.DateTimeField('tstamp', auto_now_add=True)
-    model_no = models.CharField('model_no',max_length=16, null=True, blank=True)
+    prodid = models.CharField('prodid',max_length=16, null=True, blank=True)
     name = models.CharField('name', max_length=64)
     description = models.CharField('description', max_length=64,null=True,blank=True)
     msrp = models.FloatField('msrp', null=True, blank=True)
