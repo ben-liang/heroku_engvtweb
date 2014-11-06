@@ -1,7 +1,9 @@
 from haystack.views import FacetedSearchView
 from haystack.query import SearchQuerySet
+import pandas
 from django.views.generic import View, ListView
 from django.shortcuts import render
+from changuito.models import Item
 from django_engvtweb.cart.forms import *
 from django_engvtweb.team_order.forms import TeamOrderForm
 from models import *
@@ -89,9 +91,40 @@ class OtherPartList(ListView):
 
 class TeamOrderDetailsView(View):
 
-    template = 'team_order/team_order_details.html'
-    def get(self):
-        pass
+    template_name = 'team_order/team_order_details.html'
+    group_by = None
+
+    @staticmethod
+    def get_all_order_items(team_order):
+        """
+        Get all items and carts in a query-efficient manner to avoid round trips
+        :param team_order:
+        :return:
+        """
+        carts = team_order.carts.select_related('user')
+        related_fields = ['product__prodid','product__description','user__first_name','user__last_name']
+        items = Item.objects.filter(cart__in=carts).\
+            select_related(*related_fields).all()
+        # df = pandas.DataFrame(columns=['user','quantity','prodid',
+        #                                'description','variant','unit_price','total_price'])
+        temp = [None]*len(items)
+        for i in range(0, len(items)):
+            item = items[i]
+            d = {'user': ' '.join([item.cart.user.first_name, item.cart.user.last_name]),
+                 'quantity': item.quantity,
+                 'prodid': item.product.prodid,
+                 'description': item.product.description,
+                 'variant': item.variant,
+                 'unit_price': item.unit_price,
+                 'total_price': item.total_price}
+            temp[i] = d
+        df = pandas.DataFrame(temp)
+        return df
+
+    def get(self, request):
+        form = TeamOrderForm()
+
+        return render(request, self.template_name, {'form': form})
 
     def post(self):
         pass

@@ -6,6 +6,9 @@ from django_engvtweb import SITE_NAME
 from tabulate import tabulate
 
 def tabulate_cart(cart):
+    """
+    Renders unicode tabulation of cart items.
+    """
     items = cart.item_set.all()
     rows = []
     for item in items:
@@ -22,6 +25,7 @@ def tabulate_cart(cart):
     return unicode(tabulate(rows, headers=headers))
 
 def send_order_confirmation(cart, user, time, subject=None):
+
     html_template = get_template('email/order_confirmation.html')
     text_template = get_template('email/order_confirmation')
     d = {'order_number': cart.id,
@@ -41,11 +45,3 @@ def send_order_confirmation(cart, user, time, subject=None):
                      recipient_list=[user.email],
                      html_message=html_content)
     return sent
-
-def test():
-    from django.contrib.auth.models import User
-    from changuito.models import Cart
-    t = datetime.utcnow()
-    user = User.objects.get(id=1)
-    cart = Cart.objects.get(id=16)
-    send_order_confirmation(cart, user, t)
