@@ -9,28 +9,26 @@ class AddToCartForm(forms.Form):
     object_type = forms.CharField(widget=forms.HiddenInput)
     quantity = forms.IntegerField(min_value=1)
 
-    # NULL_VARIANT = '## N/A ##'
-    def __init__(self,*args,**kwargs):
-        """
-        Add hide_variant kwarg as boolean.
-        :param args:
-        :param kwargs:
-        :return:
-        """
-        super(AddToCartForm, self).__init__(*args,**kwargs)
-        # if kwargs.has_key('initial'):
-        #     if kwargs['initial'].has_key('variant'):
-        #         variant = kwargs['initial']['variant']
-        #         if variant == self.NULL_VARIANT:
-        #             self.base_fields['variant'] = forms.CharField(widget=forms.HiddenInput)
-        #             self.base_fields['variant'].initial = self.NULL_VARIANT
-
     def clean(self):
         cleaned_data = super(AddToCartForm, self).clean()
         # if cleaned_data['variant'] == self.NULL_VARIANT:
         #     cleaned_data['variant'] = None
         # #custom validation goes here
         return cleaned_data
+
+    @classmethod
+    def bind_to_object_list(cls, queryset):
+        """
+        A little hacky but it works.  Generates a list of forms to be passed to a template with object_type and
+        object ID's pre-populated.  Typically used for in-line product list forms, where you don't want to use
+        a formset.
+
+        :param queryset: queryset of objects to prepopulate forms
+        :return: list of AddToCartForm objects (or subclass)
+        """
+        return [cls(initial={'object_id': obj.id,
+                             'object_type': queryset.model.__name__})
+                for obj in queryset]
 
 class AddToCartWithVariantForm(AddToCartForm):
     variant = forms.CharField(max_length=32, label='Size')

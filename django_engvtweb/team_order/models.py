@@ -12,7 +12,7 @@ def removeNonAscii(s):
     else:
         return s
 
-TOMBSTONE_ORDER_NAME = '###TOMBSTONEORDDER_DONOTDELETE###'
+# TOMBSTONE_ORDER_NAME = '###TOMBSTONEORDDER_DONOTDELETE###'
 
 class TeamOrder(models.Model):
 
@@ -28,11 +28,11 @@ class TeamOrder(models.Model):
     #site-package.
     carts = models.ManyToManyField('changuito.Cart',through='OrdersToCarts')
 
-    def delete(self, *args, **kwargs):
-        if self.name == TOMBSTONE_ORDER_NAME:
-            raise Exception('You cannot delete the tombstone order, stuff will break')
-        else:
-            super(TeamOrder, self).delete(*args, **kwargs)
+    # def delete(self, *args, **kwargs):
+    #     if self.name == TOMBSTONE_ORDER_NAME:
+    #         raise Exception('You cannot delete the tombstone order, stuff will break')
+    #     else:
+    #         super(TeamOrder, self).delete(*args, **kwargs)
 
     def __unicode__(self):
         return '%s' % self.name
