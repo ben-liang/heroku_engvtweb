@@ -188,7 +188,7 @@ class TeamOrderDetailsView(View):
             df = self.get_all_order_items(form.cleaned_data['team_order'])
             df_dict = self.group_by_ctype_and_brand(df)
             user_dict = self.group_by_user(df)
-            return render(request, self.template_name, {'form': form, 'order_items': df_dict})
+            return render(request, self.template_name, {'form': form, 'order_items': df_dict, 'user_items': user_dict})
 
 # def handle_email_form(request):
 #     if request.method == 'POST':
