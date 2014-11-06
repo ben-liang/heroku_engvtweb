@@ -1,0 +1,61 @@
+{% load engvtweb_tags %}
+<!DOCTYPE html>
+<html>
+<body>
+
+<h3>Detailed Order Summary for ENGVTWeb Order: {{ order }}</h3>
+
+{% for ctype, ctype_dict in order_items.items %}
+
+    {% if ctype != 'qbppart' %}
+        {% for brand, itemlist in ctype_dict.items %}
+            <div>
+            <h4> {{ brand }}</h4>
+
+            <table>
+                <thead>
+                    <td><b>Product ID</b></td>
+                    <td><b>Description</b></td>
+                    <td><b>Size/Variant</b></td>
+                    <td><b>Total Quantity</b></td>
+                </thead>
+                {% for row in itemlist %}
+                    <tr>
+                        <td>{{ row.prodid }}</td>
+                        <td>{{ row.description }}</td>
+                        <td>{{ row.variant }}</td>
+                        <td>{{ row.quantity | to_int }}</td>
+                    </tr>
+                {% endfor  %}
+                </table>
+            </div>
+        {% endfor %}
+    {% else %}
+    {#    Special formatting for QBP, don't separate by brand   #}
+    <div>
+        <h3>QBP</h3>
+        <table>
+            <thead>
+                <td><b>Product ID</b></td>
+                <td><b>Brand</b></td>
+                <td><b>Description</b></td>
+                <td><b>Total Quantity</b></td>
+            </thead>
+            <tbody>
+            {% for brand, itemlist in ctype_dict.items %}
+                {% for row in itemlist %}
+                    <tr>
+                        <td>{{ row.prodid }}</td>
+                        <td>{{ brand }}</td>
+                        <td>{{ row.description }}</td>
+                        <td>{{ row.quantity | to_int }}</td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+{% endfor %}
+</body>
+</html>
