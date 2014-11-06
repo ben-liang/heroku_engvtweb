@@ -175,7 +175,10 @@ class TeamOrderDetailsView(View):
         grouped = filled.groupby('user')
         user_dict = {}
         for name, group in grouped:
-            user_dict[name] = group.reset_index().to_dict('records')
+            k = group.reset_index()
+            user_dict[name] = {'all_items': k.to_dict('records'),
+                               'total_price': k['total_price'].sum(),
+                               'total_quantity': k['quantity'].sum()}
         return user_dict
 
     def get(self, request):

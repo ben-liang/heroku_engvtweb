@@ -109,7 +109,7 @@ $(function(){
 
     <div role="tabpanel" class="tab-pane" id="by-user">
         <br>
-        {% for user, user_list in user_items.items %}
+        {% for user, user_dict in user_items.items %}
             {#    Special formatting for QBP, don't separate by brand   #}
             <div>
                 <div class="panel panel-info">
@@ -126,7 +126,7 @@ $(function(){
                                 <td><b>Total Price</b></td>
                             </thead>
                             <tbody>
-                            {% for item in user_list %}
+                            {% for item in user_dict.all_items %}
                                 <tr>
                                     <td>{{ item.prodid }}</td>
                                     <td>{{ item.brand }}</td>
@@ -137,6 +137,15 @@ $(function(){
                                     <td>{{ item.total_price | currency }}</td>
                                 </tr>
                             {% endfor %}
+                            <tfoot>
+                                <td></td>
+                                <td></td>
+                                <td><b>Total</b></td>
+                                <td></td>
+                                <td><b>{{ user_dict.total_quantity | to_int }}</b></td>
+                                <td></td>
+                                <td><b>{{ user_dict.total_price | currency }}</b></td>
+                            </tfoot>
                             </tbody>
                         </table>
                     </div>
