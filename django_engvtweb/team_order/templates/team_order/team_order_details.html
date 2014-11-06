@@ -1,13 +1,88 @@
 {% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load engvtweb_tags %}
+
 {% block head %}
 <script type="text/javascript">
 $(function(){
-    activate_link('Team Order');
+    activate_link('All Order Details');
+
+    {# Submit form when select is changed #}
+    $('#id_team_order').change(function(){
+       $(this).closest('form').trigger('submit');
+    });
 })
 </script>
 {% include 'team_order/include/hide-field-labels.html' %}
 {% endblock %}
 
 {% block contentmain %}
-    balls
+
+<div style="max-width: 300px" class="well">
+    <h4>Please choose an order</h4>
+    <form method="post" action=".">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    </form>
+</div>
+
+{% for ctype, ctype_dict in order_items.items %}
+
+    {% if ctype != 'qbppart' %}
+    <div>
+        {% for brand, itemlist in ctype_dict.items %}
+            <div class="panel panel-info">
+                <div class="panel-heading">{{ brand }}</div>
+                <div class="panel-body">
+                    <table class="table table-hover table-striped table-condensed">
+                    <thead>
+                        <td><b>Product ID</b></td>
+                        <td><b>Description</b></td>
+                        <td><b>Size/Variant</b></td>
+                        <td><b>Total Quantity</b></td>
+                    </thead>
+                    {% for row in itemlist %}
+                        <tr>
+                            <td>{{ row.prodid }}</td>
+                            <td>{{ row.description }}</td>
+                            <td>{{ row.variant }}</td>
+                            <td>{{ row.quantity | to_int }}</td>
+                        </tr>
+                    {% endfor  %}
+                    </table>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    {#    Special formatting for QBP, don't separate by brand   #}
+    <div>
+        <div class="panel panel-info">
+            <div class="panel-heading">QBP</div>
+            <div class="panel-body">
+                <table class="table table-hover table-striped table-condensed">
+                    <thead>
+                    <td><b>Product ID</b></td>
+                    <td><b>Brand</b></td>
+                    <td><b>Description</b></td>
+                    <td><b>Total Quantity</b></td>
+                    </thead>
+                {% for brand, itemlist in ctype_dict.items %}
+                    {% for row in itemlist %}
+                        <tr>
+                            <td>{{ row.prodid }}</td>
+                            <td>{{ brand }}</td>
+                            <td>{{ row.description }}</td>
+                            <td>{{ row.quantity | to_int }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% empty %}
+{% endfor %}
+
 {% endblock %}

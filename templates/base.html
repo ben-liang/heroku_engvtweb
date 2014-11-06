@@ -50,6 +50,7 @@
             <li><a href="{% url 'team_order:stages' %}">Stages</a></li>
           </ul>
         </li>
+        <li><a href="{% url 'team_order:team-order-details' %}">All Order Details</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="{% url 'cart:cart' %}">My Cart {% bootstrap_icon "shopping-cart" %}<span class="badge">{{ shopping_cart.total_quantity|to_int}}</span></a></li>

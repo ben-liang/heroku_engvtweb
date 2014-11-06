@@ -2,10 +2,12 @@ from haystack.views import FacetedSearchView
 from haystack.query import SearchQuerySet
 import pandas
 from django.views.generic import View, ListView
+from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import render
 from changuito.models import Item
 from django_engvtweb.cart.forms import *
 from django_engvtweb.team_order.forms import TeamOrderForm
+
 from models import *
 
 #searchqueryset that is passed into view class
@@ -97,23 +99,48 @@ class TeamOrderDetailsView(View):
     @staticmethod
     def get_all_order_items(team_order):
         """
-        Get all items and carts in a query-efficient manner to avoid round trips
-        :param team_order:
-        :return:
+        Get all items and carts in a query-efficient manner to avoid round trips.
+
+        B/c of model structure it's difficult to write a Django query using built-in manager
+        methods that don't result in hundreds of queries.  This does all of the prefetching
+        items from the DB manually, and then effective joins in Python.
+
+        :param TeamOrder team_order: TeamOrder object
+        :return: pandas.DataFrame object containing all item details
         """
-        carts = team_order.carts.select_related('user')
-        related_fields = ['product__prodid','product__description','user__first_name','user__last_name']
-        items = Item.objects.filter(cart__in=carts).\
-            select_related(*related_fields).all()
-        # df = pandas.DataFrame(columns=['user','quantity','prodid',
-        #                                'description','variant','unit_price','total_price'])
+        carts = team_order.carts.all()
+        related_fields = ['content_type','cart__user']
+        items = Item.objects.filter(cart__in=carts).prefetch_related(*related_fields).all()
+        content_ids = items.values('content_type','object_id')
+
+        #do some ugly pre-fetching of items in order to minimize DB round trips
+        # when DF is created
+        contents_dict = {}
+        all_models = [Bike, OtherPart, QbpPart]
+        for model in all_models:
+            #this is very hacky
+            mname = model.__name__.lower()
+            ctype = ContentType.objects.get(model=mname)
+            ctype_id = ctype.id
+            #get list of all object IDs for this content type
+            object_ids = map(lambda f: f['object_id'],
+                             filter(lambda f: f['content_type'] == ctype_id,content_ids))
+            contents_dict[ctype] = ctype.get_all_objects_for_this_type(id__in=object_ids).\
+                prefetch_related('brand').values('id','prodid','description','brand__name')
+
         temp = [None]*len(items)
         for i in range(0, len(items)):
             item = items[i]
-            d = {'user': ' '.join([item.cart.user.first_name, item.cart.user.last_name]),
+            #get product details from content_dict
+            product_dict = filter(lambda f: f['id'] == item.object_id,
+                                  contents_dict[item.content_type])[0]
+            d = {'user': ' '.join([item.cart.user.first_name,
+                                   item.cart.user.last_name]),
                  'quantity': item.quantity,
-                 'prodid': item.product.prodid,
-                 'description': item.product.description,
+                 'prodid': product_dict['prodid'],
+                 'description': product_dict['description'],
+                 'content_type': item.content_type.model,
+                 'brand': product_dict['brand__name'],
                  'variant': item.variant,
                  'unit_price': item.unit_price,
                  'total_price': item.total_price}
@@ -121,11 +148,33 @@ class TeamOrderDetailsView(View):
         df = pandas.DataFrame(temp)
         return df
 
+    @staticmethod
+    def group_by_ctype_and_brand(df):
+
+        filled = df.fillna('null')
+        #split out DFs by content_type (model)
+        grouped_by_ctype = filled.groupby('content_type')
+        ctype_dfs = {}
+        for name, group in grouped_by_ctype:
+            #within each content type, group by brand
+            cdf = group.reset_index()
+            brand_dfs = {}
+            grouped_by_brand = cdf.groupby('brand')
+            for bname, bgroup in grouped_by_brand:
+                bdf = bgroup.reindex()
+                brand_dfs[bname] = bdf.groupby(
+                    ['prodid','description','variant']).sum().\
+                    reset_index().to_dict('records')
+            ctype_dfs[name] = brand_dfs
+        return ctype_dfs
+
     def get(self, request):
-        # form = TeamOrderForm()
-        df = self.get_all_order_items(TeamOrder.objects.get(id=2))
-        return render(request, self.template_name, {})
+        form = TeamOrderForm()
+        return render(request, self.template_name, {'form': form, 'order_items': {}})
 
-    def post(self):
-        pass
-
+    def post(self, request):
+        form = TeamOrderForm(request.POST)
+        if form.is_valid():
+            df = self.get_all_order_items(form.cleaned_data['team_order'])
+            df_dict = self.group_by_ctype_and_brand(df)
+            return render(request, self.template_name, {'form': form, 'order_items': df_dict})
