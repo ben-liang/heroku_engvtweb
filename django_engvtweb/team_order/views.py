@@ -169,6 +169,15 @@ class TeamOrderDetailsView(View):
             ctype_dfs[name] = brand_dfs
         return ctype_dfs
 
+    @staticmethod
+    def group_by_user(df):
+        filled = df.fillna('null')
+        grouped = filled.groupby('user')
+        user_dict = {}
+        for name, group in grouped:
+            user_dict[name] = group.reset_index().to_dict('records')
+        return user_dict
+
     def get(self, request):
         form = TeamOrderForm()
         return render(request, self.template_name, {'form': form, 'order_items': {}})
@@ -178,6 +187,7 @@ class TeamOrderDetailsView(View):
         if form.is_valid():
             df = self.get_all_order_items(form.cleaned_data['team_order'])
             df_dict = self.group_by_ctype_and_brand(df)
+            user_dict = self.group_by_user(df)
             return render(request, self.template_name, {'form': form, 'order_items': df_dict})
 
 # def handle_email_form(request):
