@@ -17,7 +17,7 @@ $(function(){
 {% endblock %}
 
 {% block contentmain %}
-
+<div style="max-width: 1000px" class="center-block">
 <div style="max-width: 300px" class="well">
     <h4>Please choose an order</h4>
     <form method="post" action=".">
@@ -84,5 +84,5 @@ $(function(){
     {% endif %}
 {% empty %}
 {% endfor %}
-
+</div>
 {% endblock %}
