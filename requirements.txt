@@ -4,6 +4,7 @@ dj-static==0.0.6
 django-bootstrap3==4.11.0
 ./engvtweb_third/django-changuito-0.7.ben.01.tar.gz
 django-classy-tags==0.5.1
+django-debug-toolbar==1.2.2
 django-grappelli==2.6.2
 django-haystack==2.3.1
 django-polymorphic==0.6
@@ -21,6 +22,7 @@ python-dateutil==2.2
 pytz==2014.7
 requests==2.3.0
 six==1.8.0
+sqlparse==0.1.13
 static3==0.5.1
 tabulate==0.7.3
 urllib3==1.9.1
