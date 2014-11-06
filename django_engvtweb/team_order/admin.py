@@ -15,12 +15,12 @@ class OrderToCartAdmin(admin.ModelAdmin):
 
 class QBPPartsAdmin(admin.ModelAdmin):
     list_display = ['prodid', 'category', 'brand', 'model_description',
-                    'size','color','msrp','unit_price','product_description']
+                    'size','color','msrp','unit_price','description']
     date_hierarchy = 'tstamp'
     readonly_fields = ['prodid', 'category', 'brand', 'model_description',
-                    'size','color','msrp','unit_price','product_description']
+                    'size','color','msrp','unit_price','description']
     search_fields = ['prodid', 'category', 'brand__brand', 'model_description',
-                    'size','color','msrp','unit_price','product_description']
+                    'size','color','msrp','unit_price','description']
     list_filter = ['category','brand','size']
 
 class QBPBrandsAdmin(admin.ModelAdmin):
