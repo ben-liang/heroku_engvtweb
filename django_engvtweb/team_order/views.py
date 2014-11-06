@@ -6,7 +6,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import render
 from changuito.models import Item
 from django_engvtweb.cart.forms import *
-from django_engvtweb.team_order.forms import TeamOrderForm
+from django_engvtweb.team_order.forms import TeamOrderForm, EmailOrderForm
+# from django_engvtweb.team_order.mail import
 
 from models import *
 
@@ -178,3 +179,9 @@ class TeamOrderDetailsView(View):
             df = self.get_all_order_items(form.cleaned_data['team_order'])
             df_dict = self.group_by_ctype_and_brand(df)
             return render(request, self.template_name, {'form': form, 'order_items': df_dict})
+
+# def handle_email_form(request):
+#     if request.method == 'POST':
+#         form = EmailOrderForm(request.POST)
+#         if form.is_valid():
+#             email_address = form.cleaned_data['email']
