@@ -1,5 +1,6 @@
 from django import forms
 from django.forms.formsets import formset_factory
+from django_engvtweb.team_order.models import TeamOrder
 
 class AddToCartForm(forms.Form):
     object_id = forms.IntegerField(widget=forms.HiddenInput)
@@ -41,5 +42,9 @@ class UpdateQuantityForm(forms.Form):
     def clean(self):
         cleaned_data = super(UpdateQuantityForm, self).clean()
         return cleaned_data
+
+class AssociateToOrderForm(forms.Form):
+
+    team_order = forms.ModelChoiceField(queryset=TeamOrder.objects.all())
 
 CartFormset = formset_factory(UpdateQuantityForm, extra=0)

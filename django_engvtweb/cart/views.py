@@ -106,7 +106,13 @@ def remove_item(request, item_id=None):
 def render_checkout(request):
     cart = request.cart
     if request.method == 'POST':
-        cart = cart.checkout()
+
+        form = AssociateToOrderForm(request.POST)
+        if form.is_valid():
+            cart = cart.checkout()
+            team_order = form.cleaned_data['team_order']
+            assoc = models.OrdersToCarts(cart=cart, team_order=team_order)
+            assoc.save()
 
         #TODO: Need to make this a post-save signal, this will break if email fails
         #send user order confirm first
@@ -125,8 +131,9 @@ def render_checkout(request):
             pass #NEED TO FIX THIS
 
         return HttpResponseRedirect(reverse('cart:checkout-done'))
+    form = AssociateToOrderForm()
     return render(request, 'cart/checkout.html',
-                  dict(cart=CartProxy(request)))
+                  dict(cart=CartProxy(request), form=form))
 
 def render_checkout_done(request):
     return render(request, 'cart/checkout_done.html')

@@ -65,12 +65,19 @@ $(function(){
         </div>
     </div>
     {% if not cart.is_empty %}
-    <div style="text-align: right">
+    <div class="panel panel-default">
+        <div class="panel-body">
+        <h3>Associate with Team Order</h3>
+        <p>Please associate your cart with an order from the dropdown below.</p>
         <form method="post" action=".">
         {% csrf_token %}
-        <a class="btn btn-danger" href="{% url 'cart:cart' %}">{% bootstrap_icon "backward" %} Go back</a>
-        <button class="btn btn-success" role="button" type="submit"><b>Submit</b></button>
+        {% bootstrap_form form %}
+        <div style="text-align: right">
+            <a class="btn btn-danger" href="{% url 'cart:cart' %}">{% bootstrap_icon "backward" %} Go back</a>
+            <button class="btn btn-success" role="button" type="submit"><b>Submit</b></button>
+        </div>
         </form>
+        </div>
     </div>
     {% endif %}
 </div>
