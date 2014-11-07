@@ -33,8 +33,8 @@ $(function(){
             {% for item in cart %}
                 <tr>
                     <td>
-                        {% if item.product.product_description %}
-                            {{ item.product.product_description }}
+                        {% if item.product.description %}
+                            {{ item.product.description }}
                         {% else %}
                             {{ item.product.name }}
                         {% endif %}
