@@ -7,6 +7,19 @@
 <script type="text/javascript" src="{% static 'js/jquery.tablesorter.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/jquery.tablesorter.widgets.min.js' %}"></script>
 <script type="text/javascript">
+
+$(function () {
+    $('#email_form').submit(function (e) {
+        $.post('{% url 'team_order:send-order-details' %}', $(this).serialize(), function (data) {
+            $('#email-sent').attr('style', 'display: block');
+{#            $('#beacon-url').html(data.beacon_url);#}
+        }).fail(function(){
+            $('#email-failed').attr('style', 'display: block');
+        });
+        e.preventDefault();
+    });
+});
+
 $(function(){
     activate_link('All Order Details');
 
@@ -17,7 +30,7 @@ $(function(){
     $('.table').tablesorter({
         widgets: ['columns']
     });
-
+    $('#tab1').attr('class','active');
 })
 </script>
 {% include 'team_order/include/hide-field-labels.html' %}
@@ -26,19 +39,38 @@ $(function(){
 {% block contentmain %}
 
 <div style="max-width: 1000px" class="center-block tab-content">
-    <div style="max-width: 300px" class="well">
+    <div style="max-width: 600px" class="well">
         <h4>Please choose an order</h4>
         <form method="post" action=".">
         {% csrf_token %}
         {% bootstrap_form form %}
         </form>
+
+        {% if email_form %}
+        <h4>Email order summary</h4>
+            <form id="email_form"> <!-- method="post" action="{% url 'team_order:send-order-details' %}"> -->
+                {% csrf_token %}
+                {% bootstrap_form email_form %}
+            </form>
+            <button type="submit" class="btn btn-primary">Send</button>
+        {% endif %}
     </div>
 
+    <div class="alert alert-success alert-dismissible" role="alert" id="email-sent" style="display: none">
+        <button type="button" class="close" onclick="$('#email-sent').hide()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <strong>Success!</strong> Email sent.
+    </div>
 
+    <div class="alert alert-danger alert-dismissible" role="alert" id="email-failed" style="display: none">
+        <button type="button" class="close" onclick="$('#email-failed').hide()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <strong>Whoops</strong> Email could not be sent. Please contact someone who knows what they're doing to figure out why.
+    </div>
+
+{% if order_items %}
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
-      <li role="presentation" class="active"><a href="#all-items" role="tab" data-toggle="tab">All Items</a></li>
-      <li role="presentation"><a href="#by-user" role="tab" data-toggle="tab">By User</a></li>
+      <li role="presentation" id="tab1"><a href="#all-items" role="tab" data-toggle="tab">All Items</a></li>
+      <li role="presentation" id="tab2"><a href="#by-user" role="tab" data-toggle="tab">By User</a></li>
     </ul>
 
     <div role="tabpanel" class="tab-pane active" id="all-items">
@@ -154,7 +186,7 @@ $(function(){
         {% empty %}
         {% endfor %}
     </div>
-
+{% endif %}
 
 </div>
 {% endblock %}

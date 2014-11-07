@@ -4,10 +4,11 @@ import pandas
 from django.views.generic import View, ListView
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import render
+from django.http.response import HttpResponse, Http404
 from changuito.models import Item
 from django_engvtweb.cart.forms import *
 from django_engvtweb.team_order.forms import TeamOrderForm, EmailOrderForm
-# from django_engvtweb.team_order.mail import
+import json
 
 from models import *
 
@@ -191,10 +192,50 @@ class TeamOrderDetailsView(View):
             df = self.get_all_order_items(form.cleaned_data['team_order'])
             df_dict = self.group_by_ctype_and_brand(df)
             user_dict = self.group_by_user(df)
-            return render(request, self.template_name, {'form': form, 'order_items': df_dict, 'user_items': user_dict})
+            email_form = EmailOrderForm(initial={'team_order': form.cleaned_data['team_order']})
+            context = {'form': form, 'order_items': df_dict,
+                       'user_items': user_dict, 'email_form': email_form}
+            return render(request, self.template_name, context)
 
-# def handle_email_form(request):
-#     if request.method == 'POST':
-#         form = EmailOrderForm(request.POST)
-#         if form.is_valid():
-#             email_address = form.cleaned_data['email']
+def send_order_summary(order, email, subject=None):
+    from django.core.mail import send_mail
+    from django.template.loader import get_template
+    from django.template import Context
+    from django_engvtweb import SITE_NAME
+
+    html_template = get_template('email/order_summary.html')
+    text_template = get_template('email/order_summary')
+
+    df = TeamOrderDetailsView.get_all_order_items(order)
+    order_items = TeamOrderDetailsView.group_by_ctype_and_brand(df)
+
+    d = {'order': order.name,
+         'order_items': order_items}
+    mail_context = Context(d)
+    html_content = html_template.render(mail_context)
+    text_content = text_template.render(mail_context)
+    if subject is None:
+        subject = '%s Order Summary: %s' % (SITE_NAME, order.name)
+    sent = send_mail(subject,
+                     text_content,
+                     from_email='oleg@engvtweb.com',
+                     recipient_list=[email],
+                     html_message=html_content)
+    return sent
+
+def handle_email_form(request):
+    if request.method == 'POST':
+        form = EmailOrderForm(request.POST)
+        if form.is_valid():
+            email_address = form.cleaned_data['email']
+            team_order = form.cleaned_data['team_order']
+            sent = send_order_summary(team_order, email_address)
+            if sent:
+                response_data = {'email': email_address}
+                return HttpResponse(json.dumps(response_data), content_type='application/json')
+            else:
+                return Http404('Could not send email')
+
+
+
+

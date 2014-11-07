@@ -3,15 +3,14 @@
 <html>
 <body>
 
-<h3>Detailed Order Summary for ENGVTWeb Order: {{ order }}</h3>
+<h2 style="color: cornflowerblue">Detailed Order Summary for ENGVTWeb Order: {{ order }}</h2>
 
 {% for ctype, ctype_dict in order_items.items %}
 
     {% if ctype != 'qbppart' %}
         {% for brand, itemlist in ctype_dict.items %}
             <div>
-            <h4> {{ brand }}</h4>
-
+            <h3 style="color: crimson">{{ brand }}</h3>
             <table>
                 <thead>
                     <td><b>Product ID</b></td>
@@ -29,11 +28,12 @@
                 {% endfor  %}
                 </table>
             </div>
+            <br>
         {% endfor %}
     {% else %}
     {#    Special formatting for QBP, don't separate by brand   #}
     <div>
-        <h3>QBP</h3>
+        <h3 style="color: crimson">QBP</h3>
         <table>
             <thead>
                 <td><b>Product ID</b></td>
