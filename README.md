@@ -11,7 +11,10 @@ Make sure you have Python [installed properly](http://install.python-guide.org).
 ```sh
 $ git clone git@github.com:benliang443/heroku_engvtweb.git
 $ cd heroku_engvtweb
-$ source activate #activates virtualenv so you don't need to install all dependencies
+$ ./setup_homebrew.sh
+$ virtualenv venv #creates local python virtual environment
+$ source activate #activates virtualenv
+$ pip install -r requirements.txt
 $ python manage.py syncdb
 $ foreman start web
 ```
