@@ -31,6 +31,23 @@ function select_facet(field_name, id){
     window.location.href = new_url;
 }
 
+function goToPage( query, page ) {
+    var FACETS = ['brand', 'category'];
+    var facetParams = [];
+    FACETS.forEach(function (facet) {
+        var reg = new RegExp('=' + facet + '_exact:([^&#]*)', 'i');
+        var match = window.location.href.match(reg);
+        if (match) {
+            facetParams.push('selected_facets' + match[0])
+        }
+    });
+    var url = "?q=" + query + "&amp;page=" + page;
+    if (facetParams.length > 0){
+        url += "&amp;"+ facetParams.join("&amp;");
+    }
+    return url;
+}
+
 $(function(){
     $('.control-label').hide();
     $('#category-select').change(function(){
@@ -131,13 +148,13 @@ $(function(){
             {% if page.has_previous or page.has_next %}
                 <div>
                     {% if page.has_previous %}
-                        <a href="?q={{ query }}&amp;page={{ page.previous_page_number }}"><button class="btn btn-primary">{% bootstrap_icon "chevron-left" %}Previous</button></a>
+                        <a href="javascript:goToPage({{ query }},{{ page.previous_page_number }});"><button class="btn btn-primary">{% bootstrap_icon "chevron-left" %}Previous</button></a>
                     {% endif %}
                     <span class="current">
                         Page {{ page.number }} of {{ page.paginator.num_pages }}.
                     </span>
                     {% if page.has_next %}
-                        <a href="?q={{ query }}&amp;page={{ page.next_page_number }}"><button class="btn btn-primary">Next{% bootstrap_icon "chevron-right" %}</button></a>
+                        <a href="javascript:goToPage({{ query }},{{ page.next_page_number }});"><button class="btn btn-primary">Next{% bootstrap_icon "chevron-right" %}</button></a>
                     {% endif %}
                 </div>
             {% endif %}
