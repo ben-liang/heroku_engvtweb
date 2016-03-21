@@ -45,7 +45,10 @@ function goToPage( query, page ) {
     if (facetParams.length > 0){
         url += "&amp;"+ facetParams.join("&amp;");
     }
-    return url;
+    var protocol = window.location.protocol;
+    var host = window.location.hostname;
+    var path = window.location.pathname;
+    window.location.href = protocol + "//" + host + path + url;
 }
 
 $(function(){
