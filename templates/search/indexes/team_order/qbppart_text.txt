@@ -1,4 +1,4 @@
-{{ object.product_description }}
+{{ object.description }}
 {{ object.brand.brand }}
 {{ object.prodid }}
 {{ object.category }}
