@@ -117,7 +117,7 @@ class QbpPart(models.Model):
     tstamp = models.DateTimeField('tstamp', auto_now_add=True)
     prodid = models.CharField('prod id', max_length=32)
     UPC = models.BigIntegerField('upc', null=True, blank=True)
-    category =  models.CharField('category', max_length=64)
+    category = models.CharField('category', max_length=64)
     brand = models.ForeignKey(QbpBrand)
     model = models.CharField('model', max_length=32)
     model_description = models.CharField('model_description', max_length=64,
@@ -129,7 +129,7 @@ class QbpPart(models.Model):
     unit_price = models.FloatField('unit_price')
     manufacturer_prod = models.CharField('manufacturer_prod', max_length=64,
                                          null=True, blank=True)
-    coo =  models.CharField('coo', max_length=16, null=True, blank=True)
+    coo = models.CharField('coo', max_length=16, null=True, blank=True)
     discontinued = models.BooleanField(default=False)
     uom = models.CharField('uom', max_length=16, null=True, blank=True)
     weight = models.FloatField('weight')

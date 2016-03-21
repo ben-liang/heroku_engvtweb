@@ -55,7 +55,7 @@ def import_new_qbpcatalog(file):
                        width=row.Width,
                        height=row.Height,
                        ormd=BOOLEAN_VALS[row.ORMD],
-                       product_description=removeNonAscii(row['Product Description']),
+                       description=removeNonAscii(row['Product Description']),
                        replacement=n(row.Replacement),
                        substitute=n(row.Substitute))
         parts_objs.append(part)
