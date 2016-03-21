@@ -52,7 +52,7 @@ $ heroku open
 Updating the @^# catalog is done on a one-off basis as needed.  Doing so will destroy all exiting items in the catalog,
  thereby killing all foreign-key refs from previous orders. This really shouldn't matter very much
 
-```
+```sh
 $ heroku run bash --app engvtweb #run bash shell in a one-off dyno
 $ curl "[the catalog url]" > qbpcatalog-ascii.txt
 $ iconv -f ASCII -t utf-8//IGNORE qbpcatalog-ascii.txt > qbpcatalog.txt # force re-encode the catalog to UTF-8
