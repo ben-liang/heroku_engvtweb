@@ -148,13 +148,13 @@ $(function(){
             {% if page.has_previous or page.has_next %}
                 <div>
                     {% if page.has_previous %}
-                        <a href="javascript:goToPage({{ query }},{{ page.previous_page_number }});"><button class="btn btn-primary">{% bootstrap_icon "chevron-left" %}Previous</button></a>
+                        <a href="javascript:goToPage('{{ query }}',{{ page.previous_page_number }});"><button class="btn btn-primary">{% bootstrap_icon "chevron-left" %}Previous</button></a>
                     {% endif %}
                     <span class="current">
                         Page {{ page.number }} of {{ page.paginator.num_pages }}.
                     </span>
                     {% if page.has_next %}
-                        <a href="javascript:goToPage({{ query }},{{ page.next_page_number }});"><button class="btn btn-primary">Next{% bootstrap_icon "chevron-right" %}</button></a>
+                        <a href="javascript:goToPage('{{ query }}',{{ page.next_page_number }});"><button class="btn btn-primary">Next{% bootstrap_icon "chevron-right" %}</button></a>
                     {% endif %}
                 </div>
             {% endif %}
