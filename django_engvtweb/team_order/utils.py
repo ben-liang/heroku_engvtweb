@@ -10,7 +10,7 @@ DEFAULT_PARTS_FILE = os.path.expanduser('~/qbpcatalog.txt')
 def import_new_qbpcatalog(file):
 
     #read data into dataframe to make things quick
-    df = pandas.io.parsers.read_csv(file, sep='\t', header=1)
+    df = pandas.io.parsers.read_csv(file, sep='\t', header=0)
     df = df.fillna('None')
 
     #clear all old data
