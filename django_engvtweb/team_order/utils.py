@@ -45,7 +45,7 @@ def import_new_qbpcatalog(file):
                        color=n(row.Color),
                        msrp=row.MSRP,
                        map=row.MAP,
-                       each_cost=row['Each Cost'],
+                       unit_price=row['Each Cost'],
                        manufacturer_prod=n(row['Manufacturer Prod']),
                        coo=n(row.COO),
                        discontinued=BOOLEAN_VALS[row.Discontinued],
