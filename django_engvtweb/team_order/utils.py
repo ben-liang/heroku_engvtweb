@@ -3,7 +3,6 @@ import os
 from django.db.transaction import atomic
 from models import *
 
-BOOLEAN_VALS = {'Yes': True, 'No': False}
 DEFAULT_PARTS_FILE = os.path.expanduser('~/qbpcatalog.txt')
 
 
@@ -30,6 +29,7 @@ def import_new_qbpcatalog(file):
     brand_values = dict([(i['name'], i['id']) for i in brand_values])
 
     n = lambda v: None if v == 'None' else v
+    b = lambda v: True if v == 'Yes' else False
 
     # create
     parts_objs = []
@@ -48,13 +48,13 @@ def import_new_qbpcatalog(file):
                        unit_price=row['Each Cost'],
                        manufacturer_prod=n(row['Manufacturer Prod']),
                        coo=n(row.COO),
-                       discontinued=BOOLEAN_VALS[row.Discontinued],
+                       discontinued=b(row.Discontinued),
                        uom=n(row.UOM),
                        weight=row.Weight,
                        length=row.Length,
                        width=row.Width,
                        height=row.Height,
-                       ormd=BOOLEAN_VALS[row.ORMD],
+                       ormd=b(row.ORMD),
                        description=removeNonAscii(row['Product Description']),
                        replacement=n(row.Replacement),
                        substitute=n(row.Substitute))
