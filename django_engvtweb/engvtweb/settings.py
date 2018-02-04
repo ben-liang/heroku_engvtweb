@@ -179,7 +179,6 @@ STATICFILES_DIRS = (
 GRAPPELLI_ADMIN_TITLE = 'ENGVTWeb'
 
 #Sendgrid email settings
-print os.environ
 EMAIL_HOST_USER = os.environ['SENDGRID_USERNAME']
 EMAIL_HOST= 'smtp.sendgrid.net'
 EMAIL_PORT = 587
