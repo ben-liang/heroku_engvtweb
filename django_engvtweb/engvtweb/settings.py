@@ -10,39 +10,13 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import dotenv
 import dj_database_url
 from django_engvtweb import repository_path
 from urlparse import urlparse
 
-## Hack here to get environment variables from .env
-## source: https://gist.github.com/vlasovskikh/e8fe8e0a5c4a73048a09
-from subprocess import Popen, PIPE
-import pickle
-PYTHON_DUMP_ENVIRON = """\
-import sys
-import os
-import pickle
-
-data = pickle.dumps(os.environ)
-stdout = os.fdopen(sys.stdout.fileno(), "wb")
-stdout.write(data)
-"""
-
-def source_bash_file(path):
-    bash_cmds = [
-        "source '%s'" % path,
-        "python -c '%s'" % PYTHON_DUMP_ENVIRON,
-    ]
-    p = Popen(['bash', '-c', '&&'.join(bash_cmds)], stdout=PIPE)
-    stdout, _ = p.communicate()
-    if stdout:
-        environ = pickle.loads(stdout)
-        for k, v in environ.items():
-            os.environ[k] = v
-
 REPOSITORY_PATH = repository_path()
-#now source DATABASE_URL var from .env file
-source_bash_file(os.path.join(REPOSITORY_PATH, '.env'))
+dotenv.read_dotenv(os.path.join(REPOSITORY_PATH, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -52,9 +26,9 @@ DEFAULT_SECRET_KEY = '3iy-!-d$!pc_ll$#$elg&cpr@*tfn-d5&n9ag=)%#()t$$5%5^'
 SECRET_KEY = os.environ.get('SECRET_KEY', DEFAULT_SECRET_KEY)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-TEMPLATE_DEBUG = False
+TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -205,6 +179,7 @@ STATICFILES_DIRS = (
 GRAPPELLI_ADMIN_TITLE = 'ENGVTWeb'
 
 #Sendgrid email settings
+print os.environ
 EMAIL_HOST_USER = os.environ['SENDGRID_USERNAME']
 EMAIL_HOST= 'smtp.sendgrid.net'
 EMAIL_PORT = 587
