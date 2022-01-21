@@ -15,7 +15,7 @@ django-toolbelt==0.0.1
 elasticsearch==1.2.0
 gnureadline==6.3.3
 gunicorn==19.0.0
-ipython==2.3.0
+ipython==7.16.3
 jsonfield==1.0.0
 numpy==1.9.0
 pandas==0.15.0
