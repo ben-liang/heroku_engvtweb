@@ -17,7 +17,7 @@ gnureadline==6.3.3
 gunicorn==19.0.0
 ipython==2.3.0
 jsonfield==1.0.0
-numpy==1.9.0
+numpy==1.21.0
 pandas==0.15.0
 psycopg2==2.7.3.2
 python-dateutil==2.2
